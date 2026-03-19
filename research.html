@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research — Leon Liang Fang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+  /* ================================================
+     RESEARCH PAGE
+     ================================================ */
+
+  /* ---- Intro ---- */
+  .research-intro {
+    max-width: 1100px;
+    margin-bottom: 1.6rem;
+  }
+
+  .intro-hook {
+    font-family: var(--font-serif);
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 0.85rem;
+  }
+
+  /* Three columns side by side */
+  .intro-journey {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .intro-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.65rem 0.8rem;
+    border-left: 2px solid var(--border-light);
+  }
+
+  .intro-row-label {
+    font-family: var(--font-mono);
+    font-size: 0.54rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+  }
+
+  .intro-row-divider { display: none; }
+
+  .intro-row-text {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .intro-interests {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding-left: 0.8rem;
+  }
+
+  .intro-interests-label {
+    font-family: var(--font-mono);
+    font-size: 0.54rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .intro-interest-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.28rem;
+  }
+
+  .intro-interest-tag {
+    font-family: var(--font-mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.03em;
+    padding: 0.12rem 0.5rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-medium);
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+  }
+
+  /* ---- Category section ---- */
+  .research-category {
+    margin-bottom: 2.8rem;
+  }
+  .research-category-title {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .category-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .category-dot.sage  { background: #7D8C7E; }
+  .category-dot.mauve { background: #A3929B; }
+  .category-dot.slate { background: #8E9BAA; }
+  .category-note {
+    font-style: italic;
+    letter-spacing: 0.04em;
+    opacity: 0.7;
+    text-transform: none;
+  }
+
+  /* ---- Research list ---- */
+  .research-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border-light);
+  }
+
+  /* ---- Single list item ---- */
+  .research-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.05rem 0.6rem;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background 0.18s ease,
+                box-shadow 0.22s ease;
+    position: relative;
+  }
+  .research-item:hover {
+    transform: scale(1.018) translateY(-1px);
+    background: var(--bg-secondary);
+    box-shadow: 0 4px 20px rgba(58, 54, 50, 0.07);
+    z-index: 1;
+  }
+  .research-item:hover .research-item-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* Logo badge */
+  .research-item-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-light);
+    background: white;
+    object-fit: contain;
+    padding: 3px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.07);
+  }
+
+  /* Text content */
+  .research-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .research-item-title {
+    font-family: var(--font-serif);
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.35;
+    margin-bottom: 0.28rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .research-item-meta {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Tags row */
+  .research-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.45rem;
+  }
+  .research-tag {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    padding: 0.12rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+  }
+
+  /* Arrow indicator */
+  .research-item-arrow {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    flex-shrink: 0;
+    padding-right: 0.2rem;
+  }
+
+  /* Full report badge */
+  .research-item-report {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+    border-radius: 100px;
+    padding: 0.18rem 0.6rem 0.18rem 0.55rem;
+    white-space: nowrap;
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
+  .research-item-report-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+  .research-item:hover .research-item-report {
+    color: var(--text-secondary);
+    border-color: var(--border-medium);
+  }
+
+  /* ================================================
+     FULL-SCREEN MODAL
+     ================================================ */
+  .research-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .research-modal.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Backdrop */
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(46, 42, 38, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Modal card */
+  .modal-card {
+    position: relative;
+    z-index: 1;
+    background: var(--bg-primary);
+    border-radius: 18px;
+    width: min(700px, 92vw);
+    max-height: 82vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.22);
+    transform: scale(0.94) translateY(12px);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .research-modal.visible .modal-card {
+    transform: scale(1) translateY(0);
+  }
+
+  /* Accent bar */
+  .modal-accent-bar {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+
+  /* Close button */
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1;
+    transition: background 0.18s, color 0.18s;
+  }
+  .modal-close:hover {
+    background: var(--border-light);
+    color: var(--text-primary);
+  }
+
+  /* Scrollable body */
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2.2rem 2.5rem 2.8rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) transparent;
+  }
+  .modal-body::-webkit-scrollbar { width: 3px; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+  /* Header: logo + title */
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .modal-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-light);
+    background: white;
+    object-fit: contain;
+    padding: 4px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .modal-title {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.25;
+    margin-bottom: 0.3rem;
+  }
+  .modal-meta {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    color: var(--text-muted);
+    letter-spacing: 0.07em;
+    line-height: 1.6;
+  }
+
+  /* Abstract block (research motivation/context) */
+  .modal-abstract {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.75;
+    margin-bottom: 1.2rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    border-left: 3px solid var(--modal-accent, var(--accent-taupe));
+  }
+
+  /* Description — bullet list */
+  .modal-desc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+  }
+  .modal-desc-list li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.72;
+    margin-bottom: 0.42rem;
+  }
+  .modal-desc-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--modal-accent, var(--accent-taupe));
+    opacity: 0.55;
+  }
+
+  /* Report / external link button */
+  .modal-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    background: var(--modal-accent, var(--accent-taupe));
+    padding: 0.45rem 1rem;
+    border-radius: 100px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: filter 0.18s ease, box-shadow 0.18s ease;
+  }
+  .modal-link:hover {
+    filter: brightness(1.12);
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  }
+  .modal-link-arrow { font-style: normal; font-size: 0.8rem; }
+
+  /* Tags in modal */
+  .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .modal-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    padding: 0.18rem 0.65rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+  }
+  /* Accent-colored tags for the first 2 */
+  .modal-tag.accent {
+    border-color: var(--modal-accent, var(--accent-taupe));
+    color: var(--modal-accent, var(--accent-taupe));
+    opacity: 0.85;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="grain-overlay"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Leon <span>Liang Fang</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cv.html">Journey</a></li>
+      <li><a href="research.html" class="active">Research</a></li>
+      <li><a href="ideas.html">Ideas</a></li>
+      <li><a href="why-phd.html">Why PhD</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <main class="page-content">
+    <section class="section">
+      <div class="section-label">Research</div>
+      <h1 class="fade-in" style="margin-bottom: 1rem;">Ongoing Work &amp; Projects</h1>
+      <div class="research-intro fade-in">
+
+        <p class="intro-hook">I came to academic research through practice — as a founder, investor, and incubator manager — long before I knew I wanted a PhD.</p>
+
+        <div class="intro-journey">
+          <div class="intro-row">
+            <span class="intro-row-label">Origin</span>
+            <p class="intro-row-text">My early work was practitioner research — due diligence reports and market analyses built to support investment decisions at ZhenFund and DT Capital. Not academic in form, but formative: I learned to find signal fast and synthesize across incomplete information.</p>
+          </div>
+          <div class="intro-row">
+            <span class="intro-row-label">Now</span>
+            <p class="intro-row-text">I'm working on two formal projects: empirical labor economics with Prof. Hwang at Kellogg (Stata, spatial analysis), and field research on venture formation with Prof. Lane at Harvard's LISH lab (survey design, founder interviews, AI/LLM pipeline).</p>
+          </div>
+          <div class="intro-row">
+            <span class="intro-row-label">Methods</span>
+            <p class="intro-row-text">I work across qualitative and quantitative traditions. Particularly comfortable with survey design and administration, semi-structured interviews, and building data pipelines that bridge unstructured inputs with analysis-ready outputs.</p>
+          </div>
+        </div>
+
+        <div class="intro-interests">
+          <span class="intro-interests-label">Interests</span>
+          <div class="intro-interest-tags">
+            <span class="intro-interest-tag">Entrepreneurship & VC</span>
+            <span class="intro-interest-tag">Technology Entrepreneurship</span>
+            <span class="intro-interest-tag">Government & Subsidy Policy</span>
+            <span class="intro-interest-tag">AI & Innovation</span>
+            <span class="intro-interest-tag">Venture Finance</span>
+            <span class="intro-interest-tag">Survey Design</span>
+            <span class="intro-interest-tag">Labor Markets</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="researchContainer"></div>
+
+    </section>
+  </main>
+
+  <!-- Full-screen modal -->
+  <div class="research-modal" id="researchModal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-card">
+      <div class="modal-accent-bar" id="modalAccentBar"></div>
+      <button class="modal-close" id="modalClose" aria-label="Close">&#10005;</button>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 Leon Liang Fang</p>
+    <div class="footer-links">
+      <a href="mailto:liang.fang0611@gmail.com">Email</a>
+      <a href="cv.html">Journey</a>
+      <a href="ideas.html">Ideas</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+  /* ============================================================
+     RESEARCH DATA
+     ============================================================ */
+  const RESEARCH_CATEGORIES = [
+    {
+      id: 'active',
+      label: 'Active Research',
+      dotClass: 'sage',
+      items: [
+        {
+          title: 'Empirical Research in Entrepreneurship & Labor Markets',
+          institution: 'Northwestern Kellogg',
+          meta: 'with Prof. Kylie Jiwon Hwang · 2026 — Present',
+          logo: 'assets/images/logos/kellogg.png',
+          color: '#4E2A84',
+          desc: [
+            'Supporting empirical research in the economics of entrepreneurship and labor markets',
+            'Constructing and cleaning multi-source administrative datasets for quantitative analysis',
+            'Building Stata-based regression and spatial analysis pipelines',
+            'Contributing to research design discussions on variable operationalization and causal identification strategy'
+          ],
+          tags: ['Stata', 'Regression Analysis', 'Spatial Analysis', 'Dataset Construction', 'Labor Economics']
+        },
+        {
+          title: 'Field Research on Entrepreneurship & Venture Formation',
+          institution: 'Harvard Business School, LISH',
+          meta: 'with Prof. Lane & Prof. Bernstein · 2025 — Present',
+          logo: 'assets/images/logos/hbs.jpg',
+          color: '#A41034',
+          desc: [
+            'Supporting ongoing field research at LISH (Laboratory for Innovation Science at Harvard)',
+            'Designing survey instruments and respondent sampling strategy',
+            'Conducting 25+ semi-structured interviews with early-stage founders',
+            'Building and maintaining an AI/LLM workflow for large-scale data processing, normalization, and qualitative synthesis'
+          ],
+          tags: ['Survey Design', 'Semi-structured Interviews', 'AI/LLM Pipeline', 'Data Management', 'Field Research']
+        }
+      ]
+    },
+    {
+      id: 'projects',
+      label: 'Research Projects',
+      dotClass: 'mauve',
+      items: [
+        {
+          title: 'Navigating the Labyrinth: Municipal Subsidy Policies for AI Entrepreneurship in Hangzhou',
+          institution: 'Hangzhou IC Innovation Centre',
+          meta: '2025',
+          logo: 'assets/images/logos/hz-ic.jpg',
+          color: '#A3929B',
+          abstract: 'Hangzhou has emerged as China\'s leading city for AI startup cultivation — producing ventures such as DeepSeek and BrainCo — outpacing Shanghai, Beijing, and Shenzhen in early-stage AI entrepreneurial agglomeration. This study examines the institutional mechanisms behind this trend, with a focus on how municipal subsidy policy design affects founder recruitment, talent inflow, and startup survival rates across Chinese cities.',
+          desc: [
+            'Conducted a systematic cross-city comparative analysis of AI entrepreneurship subsidies, benchmarking Hangzhou against major Chinese municipalities across three dimensions: policy release timing, subsidy intensity, and policy achievability',
+            'Constructed a parallel dataset of entrepreneurial outcome indicators — startup recruitment volume, inbound talent flow, and talent certification rates — to assess policy-outcome correlations within corresponding time windows',
+            'Primary methods: literature review combined with systematic extraction and coding of 50+ policy documents from municipal, district, and science park-level government websites',
+            'Authored a 25-page strategic report identifying structural gaps in funding allocation and application barriers disproportionately affecting non-elite founders',
+            'Findings were presented in advisory discussions on subsidy architecture redesign at the Yuhang District level'
+          ],
+          tags: ['Policy Analysis', 'AI Entrepreneurship', 'Subsidies', 'Institutional Design', 'Comparative Methods']
+        },
+        {
+          title: 'Why Didn\'t Indie Studios Disrupt AI-Driven Game Design? Evidence from Organizational Capabilities and Compute Constraints',
+          institution: 'ZhenFund',
+          meta: '2023 · with Suyao Lu & Xiaowen Yu',
+          logo: 'assets/images/logos/zhenfund.avif',
+          color: '#A3929B',
+          abstract: 'Contrary to the classic narrative of disruptive innovation led by small entrants, indie studios have not been at the forefront of AI-driven game design. This study examines why large studios — rather than indies — have led the adoption of generative AI and advanced development tools. Drawing on expert interviews and a developer survey, we find that compute constraints and organizational capability gaps, not creative limitations, are the decisive barriers preventing smaller studios from leading this technological shift.',
+          desc: [
+            'Conducted a mixed-methods study combining expert interviews with game industry practitioners and a quantitative developer survey across studio sizes',
+            'Analyzed organizational capability gaps — AI talent availability, compute budgets, and pipeline integration — between indie and AAA studios',
+            'Found that smaller studios use AI primarily for narrow, low-risk tasks (text translation, repetitive content expansion), while large studios integrate AI into core production pipelines',
+            'Identified high-text, asset-light genres (e.g. narrative RPGs) as the most viable entry point for indie AI adoption given current resource constraints',
+            'Constructed a heatmap of AI use-case adoption by studio size to visualize structural adoption asymmetries',
+            'Concluded that the inability of indie studios to disrupt stems from resource disparities and the current state of AI, which favors pipeline augmentation over end-to-end automation'
+          ],
+          link: { label: 'Read the Report', url: 'assets/papers/indie-studios-ai-game-design.pdf' },
+          tags: ['AI & Gaming', 'Disruption Theory', 'Organizational Capabilities', 'Compute Constraints', 'Mixed Methods']
+        },
+        {
+          title: 'Z-Bench: Benchmarking the Practical Utility of Large Language Models',
+          institution: 'ZhenFund',
+          meta: '2023',
+          logo: 'assets/images/logos/zhenfund.avif',
+          color: '#A3929B',
+          abstract: 'At the time of GPT-4\'s release in March 2023, systematic domain-specific evaluations of large language models — particularly in Chinese-language contexts — were scarce. Z-Bench was among the earliest independent benchmarking efforts to rigorously assess GPT-4\'s real-world utility against predecessor models, with a deliberate focus on dimensions relevant to Chinese knowledge workers, researchers, and investors.',
+          desc: [
+            'Designed and curated \'Z-Bench\' — a novel evaluation suite of 1,000+ prompts spanning three domains: logical reasoning, natural language understanding (Chinese & English), and mathematical problem-solving',
+            'Constructed test items with deliberate Chinese-language and cultural framing, probing capabilities that standard English-centric benchmarks systematically underweight',
+            'Conducted systematic comparative evaluation across model generations, documenting capability gaps and emergent behaviors in GPT-4 relative to GPT-3.5 and earlier releases',
+            'Synthesized results into a structured report with per-domain scoring, representative failure case analysis, and practical implications for AI-era investment and deployment',
+            'Published findings publicly — among the earliest Chinese-context LLM benchmark reports available to the broader research and practitioner community'
+          ],
+          link: { label: 'Read the Report', url: 'https://mp.weixin.qq.com/s/D9xQYIw8K2OjVLBwzNtagQ' },
+          tags: ['LLM Evaluation', 'AI Benchmarking', 'GPT-4', 'Chinese NLP', 'Prompt Engineering']
+        },
+        {
+          title: 'Market Research Capstone: Game Acquisition Advisory',
+          institution: 'Duke Fuqua',
+          meta: 'with Prof. Allison J.B. Chaney · 2022',
+          logo: 'assets/images/logos/duke.svg',
+          color: '#003087',
+          desc: [
+            'Built a quantitative acquisition advisory for a game development company considering RPG market entry',
+            'Used Python for web scraping and data collection; R for regression analysis',
+            'Applied conjoint analysis to estimate Willingness to Pay; K-means clustering to identify distinct player preference segments',
+            'Produced a structured M&A recommendation framework with valuation support'
+          ],
+          tags: ['Conjoint Analysis', 'K-means Clustering', 'Python', 'R', 'M&A']
+        },
+        {
+          title: 'Low-Alcohol Beverages & Gen Z: Market Research and Competitive Landscape',
+          institution: 'DT Capital Partners',
+          meta: '2021',
+          logo: 'assets/images/logos/dt-capital.avif',
+          color: '#B8A08C',
+          abstract: 'China\'s low-alcohol beverage (低度酒) market emerged as one of the fastest-growing consumer categories of the early 2020s, driven by a structural shift in drinking preferences among Gen Z consumers. This report investigates the demand-side dynamics underlying this transition — examining how younger cohorts are displacing traditional high-ABV spirits with emerging categories such as ready-to-drink cocktails, plum wine, and fruit-infused liqueurs — and evaluates the investment landscape for DT Capital\'s consumer sector screening.',
+          desc: [
+            'Conducted an in-depth comparative analysis of five major alcohol categories in China: baijiu (白酒), beer (啤酒), rice wine (黄酒), imported spirits (洋酒), and emerging low-ABV products (低度酒)',
+            'Designed and administered a 100-person consumer survey targeting Gen Z respondents, measuring brand perception, purchase frequency, occasion-based consumption, and willingness-to-pay across categories',
+            'Tracked industry development milestones and documented the rise of key brands including RIO (锐澳) and Meijian (梅见) as category-defining players',
+            'Analyzed demographic consumption data showing low-ABV products growing at approximately 2× the rate of traditional categories among consumers aged 18–28',
+            'Produced a 55-page report with market sizing, competitive landscape mapping, growth forecasts, and category-level investment implications for deal screening'
+          ],
+          link: { label: 'Read the Report', url: 'assets/papers/alcohol-genz-market-research.pdf' },
+          tags: ['Consumer Research', 'Market Analysis', 'Survey Design', 'Low-Alcohol', 'Gen Z', 'China Market']
+        }
+      ]
+    }
+  ];
+
+  /* ============================================================
+     BUILD LIST
+     ============================================================ */
+  (function () {
+    const container = document.getElementById('researchContainer');
+
+    RESEARCH_CATEGORIES.forEach(cat => {
+      const section = document.createElement('div');
+      section.className = 'research-category fade-in';
+
+      const heading = document.createElement('h2');
+      heading.className = 'research-category-title';
+      const noteHTML = cat.id === 'active'
+        ? ` <span class="category-note">— ongoing work; specific topics confidential</span>`
+        : '';
+      heading.innerHTML = `<span class="category-dot ${cat.dotClass}"></span>${cat.label}${noteHTML}`;
+      section.appendChild(heading);
+
+      const list = document.createElement('div');
+      list.className = 'research-list';
+
+      cat.items.forEach((item, idx) => {
+        const el = document.createElement('div');
+        el.className = 'research-item';
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('aria-label', 'Read more about ' + item.title);
+
+        const reportBadge = item.link
+          ? `<div class="research-item-report">
+               <span class="research-item-report-dot"></span>Full Report &#8599;
+             </div>`
+          : `<span class="research-item-arrow">&#8594;</span>`;
+
+        el.innerHTML = `
+          <img class="research-item-logo" src="${item.logo}" alt="${item.institution}">
+          <div class="research-item-content">
+            <div class="research-item-title">${item.title}</div>
+            <div class="research-item-meta">${item.institution} &middot; ${item.meta}</div>
+            <div class="research-item-tags">
+              ${item.tags.map(t => `<span class="research-tag">${t}</span>`).join('')}
+            </div>
+          </div>
+          ${reportBadge}
+        `;
+
+        el.addEventListener('click', () => openModal(item));
+        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openModal(item); });
+        list.appendChild(el);
+      });
+
+      section.appendChild(list);
+      container.appendChild(section);
+    });
+  })();
+
+  /* ============================================================
+     MODAL LOGIC
+     ============================================================ */
+  (function () {
+    const modal    = document.getElementById('researchModal');
+    const backdrop = document.getElementById('modalBackdrop');
+    const accentBar= document.getElementById('modalAccentBar');
+    const closeBtn = document.getElementById('modalClose');
+    const body     = document.getElementById('modalBody');
+
+    window.openModal = function (item) {
+      accentBar.style.background = item.color;
+      modal.style.setProperty('--modal-accent', item.color);
+
+      const abstractHTML = item.abstract
+        ? `<div class="modal-abstract">${item.abstract}</div>`
+        : '';
+      const descHTML = Array.isArray(item.desc)
+        ? `<ul class="modal-desc-list">${item.desc.map(b => `<li>${b}</li>`).join('')}</ul>`
+        : `<p class="modal-desc">${item.desc}</p>`;
+      const linkHTML = item.link
+        ? `<a class="modal-link" href="${item.link.url}" target="_blank" rel="noopener">
+             ${item.link.label} <span class="modal-link-arrow">&#8599;</span>
+           </a>`
+        : '';
+
+      body.innerHTML = `
+        <div class="modal-header">
+          <img class="modal-logo" src="${item.logo}" alt="${item.institution}">
+          <div>
+            <div class="modal-title">${item.title}</div>
+            <div class="modal-meta">${item.institution}<br>${item.meta}</div>
+          </div>
+        </div>
+        ${abstractHTML}
+        ${linkHTML}
+        ${descHTML}
+        <div class="modal-tags">
+          ${item.tags.map((t, i) => `<span class="modal-tag${i < 2 ? ' accent' : ''}">${t}</span>`).join('')}
+        </div>
+      `;
+      body.scrollTop = 0;
+      modal.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    };
+
+    function closeModal() {
+      modal.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  })();
+  </script>
+</body>
+</html>

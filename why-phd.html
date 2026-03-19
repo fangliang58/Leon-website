@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why PhD — Leon Liang Fang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+
+  /* ================================================
+     WHY PhD PAGE
+     ================================================ */
+
+  .why-page {
+    max-width: 660px;
+    margin: 0 auto;
+  }
+
+  /* ---- Opening ---- */
+  .opening-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-bottom: 0.7rem;
+  }
+
+  .opening-hook {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-style: italic;
+    color: var(--text-primary);
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    max-width: 580px;
+  }
+
+  .opening-sub {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 3rem;
+  }
+
+  /* ---- Chapter ---- */
+  .chapter {
+    margin-bottom: 3rem;
+  }
+
+  .chapter-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .chapter-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-light);
+    max-width: 48px;
+  }
+
+  .chapter-title {
+    font-family: var(--font-serif);
+    font-size: 1.12rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .chapter p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    margin-bottom: 1rem;
+  }
+
+  .chapter p:last-child {
+    margin-bottom: 0;
+  }
+
+  .chapter p em {
+    color: var(--text-primary);
+    font-style: italic;
+  }
+
+  /* ---- Pull quote ---- */
+  .pull-quote {
+    border-left: 3px solid var(--accent-taupe);
+    padding: 0.9rem 1.25rem;
+    margin: 1.6rem 0;
+    background: var(--bg-secondary);
+    border-radius: 0 8px 8px 0;
+  }
+
+  .pull-quote p {
+    font-family: var(--font-serif);
+    font-size: 0.93rem !important;
+    font-style: italic;
+    color: var(--text-primary) !important;
+    margin-bottom: 0 !important;
+    line-height: 1.7 !important;
+  }
+
+  /* ---- Closing section ---- */
+  .closing-section {
+    margin-top: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-medium);
+  }
+
+  .closing-section .chapter-label {
+    margin-bottom: 0.6rem;
+  }
+
+  .closing-section h2 {
+    font-family: var(--font-serif);
+    font-size: 1.12rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.2rem;
+    line-height: 1.35;
+  }
+
+  .closing-section p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    margin-bottom: 1rem;
+  }
+
+  .closing-section p:last-child {
+    margin-bottom: 0;
+    font-style: italic;
+    color: var(--text-primary);
+  }
+
+  /* ---- Resource tags ---- */
+  .resource-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.4rem;
+  }
+
+  .resource-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: 20px;
+    padding: 0.28rem 0.75rem;
+  }
+
+  </style>
+</head>
+<body>
+
+  <div class="grain-overlay"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Leon <span>Liang Fang</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cv.html">Journey</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="ideas.html">Ideas</a></li>
+      <li><a href="why-phd.html" class="active">Why PhD</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <main class="page-content">
+    <div class="why-page">
+
+      <div class="opening-eyebrow">Why I Want a PhD</div>
+      <p class="opening-hook">Most people have a clean origin story for why they want a PhD. Mine starts with a bankrupt car wash in northern China.</p>
+      <p class="opening-sub">A story that starts with frozen pipes.</p>
+
+      <!-- Chapter 01 -->
+      <div class="chapter">
+        <div class="chapter-label">01 &middot; Sophomore Year</div>
+        <h2 class="chapter-title">The Car Wash</h2>
+
+        <p>I was a sophomore studying in the U.S., and I kept noticing something: every gas station, every strip mall, had one of those automatic car wash bays. Quick, cheap, no line. Back home, getting your car washed still meant waiting forty minutes for somebody to do it by hand.</p>
+
+        <p>The gap felt almost too obvious. Get the machines, set up shop, capture the market before anyone else does. I later learned there's actually a name for this, "Copy to China," but at the time I just thought I was being clever.</p>
+
+        <p>So that's what I did. I spent months sourcing equipment, scouting locations, learning more about water pressure and drainage permits than any nineteen-year-old should reasonably know. The hardest part was convincing Chinese car owners that a machine wouldn't scratch their paint. Free trial coupons solved that.</p>
+
+        <p>We ran all summer and it actually worked. I remember standing there one evening watching the line form and thinking: I'm doing it.</p>
+
+        <p><strong>Then winter came. The pipes froze. The whole system collapsed.</strong></p>
+
+        <p>I packed up what I could, paid off the workers, and sold the rest at a loss. My first company lasted exactly one season, and I'd funded it with two years of tuition savings.</p>
+
+        <p><strong>I didn't tell my parents. That's the part of the story I usually leave out.</strong></p>
+
+        <p>I went in thinking I'd spotted a gap in the market. I came out understanding that surviving a summer doesn't mean you've built anything durable.</p>
+
+        <p>But I also came out knowing something else: I wasn't done. <strong>The failure didn't make me want to stop. It made me want to understand why things break.</strong></p>
+      </div>
+
+      <!-- Chapter 02 -->
+      <div class="chapter">
+        <div class="chapter-label">02 &middot; Recovery</div>
+        <h2 class="chapter-title">Teaching My Way Back</h2>
+
+        <p>I needed money. Quietly and quickly. TOEFL and AP tutoring was the fastest route. Late nights, long hours, students calling from the other side of the world at 2 a.m. It wasn't glamorous, but it worked. I clawed back most of what I'd lost. Some early bets on Bitcoin and U.S. stocks helped too, though I'll be honest: luck had more to do with that than skill.</p>
+
+        <p>What I didn't expect was how much the teaching itself would get under my skin.</p>
+
+        <p>Not the test prep. That part was mechanical, almost algorithmic. But there's this moment, if you've ever taught anyone anything, where you can literally see the light come on. A student who's been stuck on some concept for weeks just… gets it. Their face changes.</p>
+
+        <p><strong>I lived for that.</strong></p>
+
+        <p>I didn't fully understand it at the time, but looking back, that was the first time I felt the pull toward something bigger than just building a business. There was something about helping someone unlock a capability they didn't know they had.</p>
+
+        <p>That feeling never really went away. The relationships I built with those students, dozens of them spread across China, ended up laying the foundation for everything that came next.</p>
+      </div>
+
+      <!-- Chapter 03 -->
+      <div class="chapter">
+        <div class="chapter-label">03 &middot; First Real Company</div>
+        <h2 class="chapter-title">Triangle Education</h2>
+
+        <p>After graduating, I went all-in on a different kind of education company. My partner and I had met through the tutoring work, and we kept circling the same observation: Chinese schools are extraordinarily good at teaching students how to pass exams.</p>
+
+        <p>They are genuinely not good at teaching them how to manage money, understand basic economics, or carry on a conversation with someone outside their immediate circle.</p>
+
+        <p>We called the company Triangle Education, and we decided to teach those things instead. Not test prep. Not "exam-oriented training," which is what most Chinese education companies sell. The stuff that actually matters once you're out in the world: financial literacy, communication skills, real-world economic thinking. The kind of knowledge that schools had decided students didn't need.</p>
+
+        <p><strong>The market turned out to be real.</strong></p>
+
+        <p>We grew to offices in Beijing and Hangzhou, eventually hit one million RMB in annual revenue, and built a hybrid model with offline classrooms supplemented by online instruction. After I left for graduate school at Duke, we transitioned the business fully online and sold the company.</p>
+
+        <p>It was the first time I'd built something that actually scaled. And somewhere in the middle of running it, I learned what I think is the most underrated truth about entrepreneurship: <strong>most of it is just not stopping.</strong></p>
+
+        <p>Selling Triangle felt right. But I couldn't let go of what we'd really been doing.</p>
+
+        <p>At its core, the whole thing was about giving people knowledge that their schools had decided they didn't need. We were filling gaps the system had left open, and the fact that there was a market for it said something uncomfortable about the system itself.</p>
+
+        <p>That idea kept rattling around in my head long after the company was gone.</p>
+      </div>
+
+      <!-- Chapter 04 -->
+      <div class="chapter">
+        <div class="chapter-label">04 &middot; The VC World</div>
+        <h2 class="chapter-title">The Question I Couldn't Shake</h2>
+
+        <p>After Duke, I joined Zhenfund as a full-time associate. My role was post-investment work, which mostly meant sitting with founders through the worst stretches of their lives: helping them find capital when the runway was running out, connecting them to the right people, figuring out what came next.</p>
+
+        <p>Over a few years I got to know several hundred founders across the portfolio, at least a hundred of them closely enough to understand their businesses inside and out. I visited their offices, sat in on their strategy sessions, watched some of them succeed brilliantly and others flame out. It was an incredible education in what building a company actually looks like at every stage.</p>
+
+        <p>I also did a lot of government-relations work. Our team helped the fund raise capital and connected portfolio companies with state-owned enterprises and government partners for follow-on funding and strategic collaboration. That meant I spent a lot of time with government officials, learning how subsidy policies get designed, what performance metrics they care about, and how the machinery of public support for entrepreneurship actually works behind the scenes.</p>
+
+        <p>Many of those founder relationships are still active today. Some are already informing ongoing research, including experimental work I'm doing with Professor Lane at HBS.</p>
+
+        <p>But something started to bother me.</p>
+
+        <div class="pull-quote">
+          <p>I was presenting a founder to a senior investor, someone I genuinely believed was building something interesting. The investor's first question was where the founder went to school. I told him: nothing famous, no big-tech background. His response, more or less, was "then let's not bother."</p>
+        </div>
+
+        <p>That conversation stuck with me in a way I didn't expect. The more I looked, the more I saw the same pattern everywhere. Entrepreneurship, as practiced at the top of the VC world, was starting to look like a credential game. Stanford, MIT, Harvard, YC, Series A. The idea itself barely got evaluated if the pedigree wasn't right.</p>
+
+        <p><strong>And I kept wondering: is this actually the only valid form of entrepreneurship, or just the only form the industry has decided to pay attention to?</strong></p>
+
+        <p>Because there's a much broader version of the story. Someone who starts a one-person company. Someone who becomes self-employed and creates real value for a community. Someone who builds something meaningful without ever raising a dollar of venture capital. Are they not entrepreneurs? The definition is shifting, and has been for a while. The academic conversation is finally starting to catch up.</p>
+
+        <p>It was around this time that I read Gartner's 1988 paper, <em>"Who Is an Entrepreneur?" Is the Wrong Question.</em> His argument was that the field had spent decades studying the wrong thing: the person, rather than the process of venture creation itself. That reframing cracked something open for me.</p>
+
+        <p>Because the version of entrepreneurship I was watching play out at Zhenfund, by Gartner's definition, was a remarkably narrow read of the phenomenon.</p>
+
+        <p>And I couldn't stop thinking about what we were missing.</p>
+      </div>
+
+      <!-- Chapter 05 -->
+      <div class="chapter">
+        <div class="chapter-label">05 &middot; The Other Side</div>
+        <h2 class="chapter-title">Hangzhou and the Founders Nobody Funds</h2>
+
+        <p>That realization is what pushed me out the door. I didn't want to keep helping the most privileged people do the most privileged things. I genuinely believe that everyone has the right to pursue their own version of entrepreneurship. You don't need to have gone to a top school, worked at a big tech company, or fit some investor's mental model of what a founder looks like.</p>
+
+        <p>Not every company has to change the world. And in a down economy, starting something of your own can be just as valid as looking for a job, sometimes even more so.</p>
+
+        <p>So I left Zhenfund and took a role at a government-backed innovation center in Hangzhou. Partly it was a change of pace. Partly it was genuine curiosity about what entrepreneurship looks like when nobody from Sequoia or Tsinghua is in the room.</p>
+
+        <p>The center was officially called an integrated circuit innovation hub, but in practice we spent most of our time supporting AI and software startups. The founders I met there were engineers, not MBAs. Their pitch decks were a little rough. Most VCs wouldn't touch them.</p>
+
+        <p>But they were building real things. Solving real problems. And navigating a government support system that most Western researchers have barely looked at.</p>
+
+        <p>My job was to help them match with government investment, prepare for public review panels, learn how to present to evaluators, and access resources like subsidized office space and compute credits. Hangzhou has done more to systematically support early-stage AI and tech ventures than almost any other Chinese city, arguably more than Shanghai, Shenzhen, or Beijing in certain categories. It caught the wave at exactly the right moment and is now the hottest AI city in China.</p>
+
+        <p>I think there's a tremendous amount of research to be done here: how local policy incentivizes AI entrepreneurship, what the actual mechanisms of public support look like, and whether those mechanisms produce different kinds of founders and companies than the VC-backed model does. I have on-the-ground relationships and data access that could make that research possible.</p>
+
+        <p>What struck me, over and over, was how much a founder's trajectory depended on timing and access. When they started. Who found them first. Whether the ecosystem around them treated entrepreneurship as a privilege reserved for the credentialed few, or as a pathway open to anyone with the right problem and enough stubbornness to keep going.</p>
+
+        <p><strong>Those two framings produce very different outcomes. I'd now seen both up close.</strong></p>
+      </div>
+
+      <!-- Chapter 06 -->
+      <div class="chapter">
+        <div class="chapter-label">06 &middot; The Turning Point</div>
+        <h2 class="chapter-title">The Conversation That Changed Things</h2>
+
+        <p>Something else kept nagging at me during this period.</p>
+
+        <p>In conversation after conversation, the founders I worked with told me the same thing: they'd stumbled into entrepreneurship after college, almost by accident. A side project that took off. A friend who needed help building something. A layoff that turned into an opportunity.</p>
+
+        <p>But when I looked at the founders who'd built the most enduring companies, Li Xiang at Li Auto in China, Jobs and Musk in the U.S., many of them had the entrepreneurial instinct long before college. They'd been tinkering, building, selling things since they were kids. The seed was planted early.</p>
+
+        <p>That made me think back to Triangle. What we'd really been doing was trying to give young people skills the system had skipped over. But what if the most important thing we could give a potential entrepreneur isn't a skill at all? What if it's a sense of possibility? And what if that window opens much earlier than we think?</p>
+
+        <p>A lot of entrepreneurial potential never gets developed. Or it gets developed too late, after someone already has a mortgage, kids, and a risk tolerance that's been ground down to nothing by life. I was almost thirty and already starting to feel that pressure myself.</p>
+
+        <p>It was right around then that I had a long conversation with Professor Kang at UCSB. His path looked a lot like mine, just a few chapters ahead. He'd founded companies, failed, spent years in industry at Samsung, then made an unexpected turn: a master's at LBS, a PhD, and eventually a faculty position studying entrepreneurship.</p>
+
+        <p>I asked him why he'd made the switch.</p>
+
+        <div class="pull-quote">
+          <p>He said: every time you run a research project as an independent PI or professor, you're essentially doing a micro-startup. You build a team. You manage scarce resources. You navigate uncertain terrain. You try to produce something original that other people find valuable. The risk is lower, but the leverage on ideas is much, much higher.</p>
+        </div>
+
+        <p>That landed differently than I expected.</p>
+
+        <p>Because when I looked at everything I'd done, the teaching, the two companies, the VC fund, the government incubator, all of it kept circling back to the same question: <strong>who gets to try?</strong></p>
+
+        <p>Who gets access to the knowledge, the capital, the networks, and the legitimacy to start something? What happens to all the people who don't? And could we reach them earlier, through education, through policy, through better ecosystem design, before the window closes?</p>
+
+        <p>I'd been a teacher. I loved it. I'd been a founder. I loved that too. And I realized that the version of the problem I cared about most wasn't one I could solve by starting another company.</p>
+
+        <p>Entrepreneurship is famously something you can't teach in a classroom, but you can study how to awaken it, how to create the conditions where it's more likely to happen, and how to make sure the opportunity to try isn't reserved for a lucky few.</p>
+
+        <p><strong>A PhD started to feel less like a career move and more like the only place where I could build the tools to actually answer that question properly.</strong></p>
+      </div>
+
+      <!-- Closing -->
+      <div class="closing-section">
+        <div class="chapter-label">What I'm Looking For</div>
+        <h2>What I Want to Study, and What I Bring</h2>
+
+        <p>The questions I want to work on aren't abstract to me. Who gets funded and why. What execution looks like outside elite ecosystems. How policy shapes who starts a company and when. Whether the tools being built right now, AI, accessible dev tooling, cloud infrastructure, are genuinely lowering the barriers to starting something, or just rewarding a different set of credentials.</p>
+
+        <p>I've watched versions of all of these play out firsthand, and I want to study them with the rigor they deserve.</p>
+
+        <p>My ultimate goal is to become a professor of entrepreneurship, someone who both researches these questions and mentors the next generation of founders, especially the ones the system tends to overlook.</p>
+
+        <p>I also bring things that are hard to manufacture inside a lab.</p>
+
+        <p>I have direct relationships with several hundred founders across the Zhenfund portfolio, relationships that are already informing ongoing research, including experimental work with Professor Lane and Professor Bernstein at HBS, and collaborative projects with Professor Huang at Northwestern. I have government-adjacent networks in Hangzhou, along with a family background in the public sector, which gives me the kind of access to policy data and government cooperation that most researchers in this space simply don't have.</p>
+
+        <p>If the research calls for field experiments, founder surveys, or policy data from Chinese municipal governments, I can make that happen. That's not a hypothetical. It's something I'm already doing.</p>
+
+        <p>I have enough operational experience to notice when a theoretical model doesn't quite match the reality it's supposed to describe. And I have something harder to quantify: years of watching the gap between who entrepreneurship is supposed to be for and who actually gets to do it.</p>
+
+        <p>I've been a teacher who found out he loved making people smarter. I've been a founder who learned that building things is the only work that makes him feel fully alive. And I've been an insider in institutions, a VC fund and a government incubator, that decide every day who gets a shot and who doesn't.</p>
+
+        <p>What I'm looking for now is the one thing I've been missing: a serious intellectual home, real mentorship, and collaborators who can help me turn what I've seen into research that actually matters.</p>
+
+        <p>If you're reading this, you might be that person.</p>
+
+        <div class="resource-tags">
+          <span class="resource-tag">Zhenfund Founder Network</span>
+          <span class="resource-tag">Hangzhou Government Relations</span>
+          <span class="resource-tag">HBS Collaborations</span>
+          <span class="resource-tag">Field Experiment Access</span>
+          <span class="resource-tag">China Policy Data</span>
+          <span class="resource-tag">SME Platform Partnership</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    const toggle = document.querySelector('.nav-toggle');
+    const navLinks = document.querySelector('.nav-links');
+    if (toggle && navLinks) {
+      toggle.addEventListener('click', () => {
+        navLinks.classList.toggle('open');
+        toggle.classList.toggle('open');
+      });
+    }
+  </script>
+
+</body>
+</html>
