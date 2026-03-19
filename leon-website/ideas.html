@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ideas — Leon Liang Fang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+  /* ================================================
+     IDEAS PAGE
+     ================================================ */
+
+  /* ---- Intro ---- */
+  .ideas-intro {
+    max-width: 680px;
+    margin-bottom: 2.2rem;
+  }
+  .ideas-intro p {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+  .ideas-intro em {
+    color: var(--text-primary);
+    font-style: italic;
+  }
+
+  /* ---- Category section ---- */
+  .idea-category {
+    margin-bottom: 2.5rem;
+  }
+  .idea-category-title {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--text-muted);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .category-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- Ideas list ---- */
+  .idea-list {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border-light);
+  }
+
+  /* ---- Single list item ---- */
+  .idea-item {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.05rem 0.6rem;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.22s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                background 0.18s ease,
+                box-shadow 0.22s ease;
+    position: relative;
+  }
+  .idea-item:hover {
+    transform: scale(1.018) translateY(-1px);
+    background: var(--bg-secondary);
+    box-shadow: 0 4px 20px rgba(58, 54, 50, 0.07);
+    z-index: 1;
+  }
+
+  /* Category color icon */
+  .idea-item-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.12);
+  }
+
+  /* Text content */
+  .idea-item-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .idea-item-title {
+    font-family: var(--font-serif);
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.35;
+    margin-bottom: 0.28rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .idea-item-meta {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    margin-bottom: 0.4rem;
+  }
+  .idea-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+  .idea-tag {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    padding: 0.12rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+  }
+
+  /* Maturity badge */
+  .idea-item-maturity {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 0.57rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+    border-radius: 100px;
+    padding: 0.18rem 0.6rem;
+    white-space: nowrap;
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
+  .idea-item-maturity-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .idea-item:hover .idea-item-maturity {
+    color: var(--text-secondary);
+    border-color: var(--border-medium);
+  }
+
+  /* ================================================
+     FULL-SCREEN MODAL
+     ================================================ */
+  .idea-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.28s ease;
+  }
+  .idea-modal.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(46, 42, 38, 0.52);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .modal-card {
+    position: relative;
+    z-index: 1;
+    background: var(--bg-primary);
+    border-radius: 18px;
+    width: min(700px, 92vw);
+    max-height: 82vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.22);
+    transform: scale(0.94) translateY(12px);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .idea-modal.visible .modal-card {
+    transform: scale(1) translateY(0);
+  }
+  .modal-accent-bar {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  .modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: var(--text-muted);
+    line-height: 1;
+    transition: background 0.18s, color 0.18s;
+  }
+  .modal-close:hover {
+    background: var(--border-light);
+    color: var(--text-primary);
+  }
+  .modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2.2rem 2.5rem 2.8rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) transparent;
+  }
+  .modal-body::-webkit-scrollbar { width: 3px; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+  /* Modal header */
+  .modal-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.1rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+  .modal-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .modal-header-text { flex: 1; min-width: 0; }
+  .modal-title {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.25;
+    margin-bottom: 0.35rem;
+  }
+  .modal-meta {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    color: var(--text-muted);
+    letter-spacing: 0.07em;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .modal-maturity-badge {
+    font-family: var(--font-mono);
+    font-size: 0.57rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    padding: 0.12rem 0.55rem;
+    border-radius: 100px;
+    border: 1px solid var(--modal-accent, var(--accent-taupe));
+    color: var(--modal-accent, var(--accent-taupe));
+    opacity: 0.85;
+  }
+
+  /* Abstract */
+  .modal-abstract {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.75;
+    margin-bottom: 1.2rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    border-left: 3px solid var(--modal-accent, var(--accent-taupe));
+  }
+
+  /* Bullet list */
+  .modal-desc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+  }
+  .modal-desc-list li {
+    position: relative;
+    padding-left: 1.1rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.72;
+    margin-bottom: 0.42rem;
+  }
+  .modal-desc-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--modal-accent, var(--accent-taupe));
+    opacity: 0.55;
+  }
+
+  /* Section label inside modal */
+  .modal-section-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin: 1.2rem 0 0.5rem;
+  }
+
+  /* Tags */
+  .modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .modal-tag {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    padding: 0.18rem 0.65rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+  }
+  .modal-tag.accent {
+    border-color: var(--modal-accent, var(--accent-taupe));
+    color: var(--modal-accent, var(--accent-taupe));
+    opacity: 0.85;
+  }
+  </style>
+</head>
+<body>
+
+  <div class="grain-overlay"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Leon <span>Liang Fang</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cv.html">Journey</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="ideas.html" class="active">Ideas</a></li>
+      <li><a href="why-phd.html">Why PhD</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <main class="page-content">
+    <section class="section">
+      <div class="section-label">Ideas &amp; Research Questions</div>
+      <h1 class="fade-in" style="margin-bottom: 1rem;">Thinking Out Loud</h1>
+      <div class="ideas-intro fade-in">
+        <p>A running collection of research questions I want to pursue — some concrete proposals, others still taking shape.
+           Most emerged from the friction between my experience as a founder and investor and the academic frameworks I've been engaging with.
+           <em>This page is a living notebook.</em></p>
+      </div>
+
+      <div id="ideasContainer"></div>
+    </section>
+  </main>
+
+  <!-- Full-screen modal -->
+  <div class="idea-modal" id="ideaModal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="ideaModalBackdrop"></div>
+    <div class="modal-card">
+      <div class="modal-accent-bar" id="ideaAccentBar"></div>
+      <button class="modal-close" id="ideaModalClose" aria-label="Close">&#10005;</button>
+      <div class="modal-body" id="ideaModalBody"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2026 Leon Liang Fang</p>
+    <div class="footer-links">
+      <a href="mailto:liang.fang0611@gmail.com">Email</a>
+      <a href="cv.html">Journey</a>
+      <a href="research.html">Research</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+  /* ============================================================
+     IDEAS DATA
+     ============================================================ */
+  const IDEA_CATEGORIES = [
+    {
+      id: 'vc',
+      label: 'VC & Entrepreneurship',
+      dotColor: '#5E8A78',
+      iconLetter: 'V',
+      items: [
+        {
+          title: 'Does the Diploma Still Close Deals? A Double-Blind Audit of Educational Credential Bias in VC Screening',
+          category: 'VC & Entrepreneurship',
+          maturity: 'Working Hypothesis',
+          color: '#5E8A78',
+          iconLetter: 'V',
+          abstract: 'Venture capitalists routinely cite the quality of the founding team as their top investment criterion — but how much of that judgment is about the person versus the institution on their resume? This study uses a double-blind audit design: identical business plans and AI startup proposals are shown to investors, with founder educational credentials varied across treatment groups. By holding everything else constant and randomizing only credential information, we can cleanly measure how much a degree from a prestigious school inflates — or an unknown school deflates — investor interest, question quality, and willingness to proceed.',
+          points: [
+            {
+              label: 'Experimental Design',
+              items: [
+                'Prepare a set of high-quality, realistic business plans and AI startup proposals with identical content, financials, and market analysis — the pitch material itself is held constant across all conditions',
+                'Randomize founder educational background across three conditions: (A) top-tier institution (Stanford, MIT, Tsinghua), (B) non-prestigious but legitimate institution, (C) no degree information disclosed',
+                'Present to a sample of active VC professionals; measure investment interest (binary proceed/pass), number and depth of follow-up questions, perceived founder credibility ratings, and hypothetical term sheet willingness'
+              ]
+            },
+            {
+              label: 'What We Are Testing',
+              items: [
+                'Primary question: does credential tier shift investment decisions when the underlying business opportunity is identical? If yes, by how much — and is the effect larger at early stage (where founder signals dominate) than growth stage (where traction dominates)?',
+                'Credential disclosure vs. suppression: does withholding credential information (Group C) cause investors to assume a negative signal, or do they evaluate the pitch on its merits? The direction of this effect distinguishes optimistic from pessimistic default priors',
+                'Substitute signal question: when credentials are hidden, do investors ask more probing questions about team background, or shift weight toward traction metrics and market size — revealing what they use credentials as a proxy for'
+              ]
+            },
+            {
+              label: 'Why This Matters',
+              items: [
+                'If investors with identical pitch material fund Group A at meaningfully higher rates than Groups B or C, it reveals credential-driven pattern matching that is independent of actual startup quality — a structural bias in how capital gets allocated',
+                'Has direct implications for non-traditional founders: founders from non-elite backgrounds with strong ideas may face systematic screening disadvantage at the earliest, most consequential stage of the funding funnel',
+                'Cross-cultural extension: the credential premium is likely larger in Asian VC markets (where academic pedigree carries significant social weight) than in Silicon Valley (where dropout mythology partially offsets it) — testing both provides a theoretically interesting contrast'
+              ]
+            }
+          ],
+          tags: ['Venture Capital', 'Credential Bias', 'Audit Study', 'Double-Blind Experiment', 'Signal Theory', 'Access to Capital']
+        },
+        {
+          title: 'Soft Scrutiny: Do Chinese VCs Ask Fewer — and Softer — Questions When a Foreign Founder Pitches?',
+          category: 'VC & Entrepreneurship',
+          maturity: 'Developing',
+          color: '#5E8A78',
+          iconLetter: 'V',
+          abstract: 'Observed in practice: when a foreign team member takes the lead in a pitch to Chinese VCs, the Q&A tends to be shorter, less probing, and more deferential than when the same content is delivered by a Chinese founder. Two competing explanations exist — a language accommodation effect (VCs soften questions to reduce conversational friction) and a trust premium effect (foreign, especially Western, technical founders enjoy higher baseline credibility). Disentangling these requires a controlled experiment.',
+          points: [
+            {
+              label: 'The Two Hypotheses',
+              items: [
+                'Language Barrier Hypothesis: VCs ask fewer and softer questions because cross-lingual communication is cognitively costly and socially awkward — the effect disappears if the foreign founder speaks fluent Mandarin',
+                'Trust Premium Hypothesis: VCs extend greater epistemic deference to foreign (particularly Western) technical founders, treating nationality as a positive quality signal independent of language — the effect persists even in same-language conditions',
+                'A third, complementary mechanism: face-saving norms may discourage VCs from visibly challenging a foreign guest in a group setting, creating a social courtesy effect layered on top of either cognitive mechanism'
+              ]
+            },
+            {
+              label: 'Experimental Design',
+              items: [
+                'Vignette / video experiment: produce identical pitch recordings varying only the presenter along two dimensions — nationality (Chinese vs. Western-presenting) and language (Mandarin vs. English with translation)',
+                'Assign Chinese VC professionals to rate their intended follow-up questions on a standardized scale: quantity, perceived adversarialness, and epistemic depth',
+                'A 2×2 design (nationality × language) allows clean separation: if the effect persists in the Mandarin-speaking foreign-founder condition, it cannot be attributed to language barrier alone'
+              ]
+            },
+            {
+              label: 'Broader Implications',
+              items: [
+                'If the trust premium hypothesis holds, it implies a systematic cross-border evaluation asymmetry: foreign founders receive a due-diligence discount that could distort capital allocation toward weaker international deals',
+                'Connects to status characteristics theory — in uncertain evaluation contexts (early-stage, high technical ambiguity), high-status demographic signals (Western founder, technical role) reduce scrutiny as a heuristic substitute for competence assessment',
+                'Has policy and practical relevance: Chinese VC firms increasingly evaluate cross-border deals; understanding the source of evaluation bias is prerequisite to correcting it'
+              ]
+            }
+          ],
+          tags: ['Venture Capital', 'Cross-Cultural', 'Evaluation Bias', 'Trust Premium', 'China', 'Experimental Design', 'Status Characteristics']
+        },
+        {
+          title: 'First Check Age: Does Receiving Investment Too Early Help or Hurt a Founder\'s Long-Run Trajectory?',
+          category: 'VC & Entrepreneurship',
+          maturity: 'Working Hypothesis',
+          color: '#5E8A78',
+          iconLetter: 'V',
+          abstract: 'Some founders receive their first institutional check in high school or early college. Is this a gift or a trap? Early investment may confer durable advantages — VC network access, learning-by-doing, and a quality signal that compounds across future fundraising rounds. But it may equally impose costs: foreclosed education, premature scaling pressure, and a warped risk calibration before the founder has developed judgment. This study uses longitudinal founder-level data to ask whether age at first investment predicts long-run entrepreneurial outcomes.',
+          points: [
+            {
+              label: 'Competing Mechanisms',
+              items: [
+                'Accelerant hypothesis: early investment provides compounding network access and mentorship at a formative stage — the VC relationship itself is the durable asset, not the capital',
+                'Signal compounding hypothesis: being funded at 17 is an extraordinarily strong quality signal; if investors use prior funding as a credibility anchor, early-funded founders enter every future round with a reputational head start',
+                'Opportunity cost hypothesis: founders who take money early forgo education, peer network formation, and low-stakes experimentation — the very inputs that produce founder judgment in later, higher-stakes ventures',
+                'Overconfidence trap: early success may calibrate risk tolerance incorrectly, leading to overextension or premature product-market fit assumptions in subsequent ventures'
+              ]
+            },
+            {
+              label: 'Data & Outcomes',
+              items: [
+                'Primary data source: Crunchbase / PitchBook founder-level records — first funding date matched to founder birth year or graduation year to approximate age at first check',
+                'Outcome variables: (1) total capital raised across all ventures, (2) probability of any exit (acquisition or IPO), (3) IPO probability specifically, (4) time to exit, (5) number of subsequent ventures founded',
+                'Secondary cut: compare "very early" founders (funded ≤ age 22) vs. "standard" founders (23–30) vs. "late" founders (30+), controlling for sector, vintage year, and geography'
+              ]
+            },
+            {
+              label: 'Identification Challenge',
+              items: [
+                'Core endogeneity problem: the youngest-funded founders are almost certainly right-tail outliers in ability — any positive outcome correlation may reflect selection, not the effect of early funding itself',
+                'Proposed instrument: regional variation in the density of youth-focused accelerators and high-school entrepreneurship programs, which shifts the probability of early funding without directly affecting long-run founder quality',
+                'Complementary approach: within-founder analysis for serial entrepreneurs — does the gap between first-check age and subsequent venture outcomes shrink as controls are added, pointing toward selection rather than treatment?'
+              ]
+            }
+          ],
+          tags: ['Venture Capital', 'Founder Trajectories', 'Human Capital', 'Age & Entrepreneurship', 'Longitudinal Data', 'Crunchbase', 'Selection Effects']
+        },
+        {
+          title: 'Operationalizing Execution: How Do VCs Measure What They Cannot Define?',
+          category: 'VC & Entrepreneurship',
+          maturity: 'Developing',
+          color: '#5E8A78',
+          iconLetter: 'V',
+          abstract: '"Execution ability" is the most frequently cited criterion in venture investment decisions and the least rigorously defined. Investors say they know it when they see it — but what exactly are they seeing? This study develops a multi-dimensional taxonomy of execution signals used by VCs, tests whether investors agree on which signals matter most (inter-rater reliability), and compares stated importance rankings against revealed preferences in a conjoint experiment. The gap between the two is where the most interesting findings live.',
+          points: [
+            {
+              label: 'The Four Execution Dimensions',
+              items: [
+                'Business plan completeness: does the degree of preparation and internal consistency in a founding document predict investor confidence — or does over-polished documentation signal consultancy thinking rather than builder mentality?',
+                'Early user acquisition speed: how quickly the founding team acquired their first 100/1,000 users, treated as a revealed hustle signal independent of product quality',
+                'Core team stability: whether co-founders and early key hires remained through the evaluation period — tests whether team cohesion functions as a proxy for founder leadership and vision clarity',
+                'Product iteration velocity: time between meaningful product releases, used as a measure of learning agility and operational throughput under resource constraints'
+              ]
+            },
+            {
+              label: 'Two-Stage Research Design',
+              items: [
+                'Stage 1 — Survey: ask a sample of active VCs to rank the four dimensions by importance, define their own execution criteria in open response, and rate how consistently they apply each signal across deals. This establishes stated preferences and inter-rater reliability',
+                'Stage 2 — Conjoint experiment: present investors with pairs of founder profiles that vary systematically across the four execution dimensions (and a fifth control dimension). Measure which attributes actually drive simulated investment decisions — this is the revealed preference measure',
+                'Key comparison: wherever stated rankings (Stage 1) diverge from conjoint weights (Stage 2), the gap reveals systematic self-deception or social desirability bias in how investors describe their own decision-making',
+                'Optional Stage 3 — Retrospective validation: for a sample of funded companies, score early-stage execution signals from archival data (Crunchbase, LinkedIn, press coverage) and test whether any dimension predicts 3-year outcomes better than others'
+              ]
+            },
+            {
+              label: 'What Would Make This Publishable',
+              items: [
+                'The construct validity contribution: this study would produce the first validated, multi-item measurement instrument for "founder execution ability" as perceived by investors — a building block other researchers can use',
+                'Cross-cultural extension: do Chinese VCs and U.S. VCs weight the same execution signals differently? Team stability may carry more weight in China (where co-founder splits are highly stigmatized); user acquisition speed may be weighted more heavily in the U.S. (growth-first culture)',
+                'Stated vs. revealed divergence as the headline finding: if investors claim to weight team stability highest but conjoint data shows user acquisition speed dominates actual choices, that discrepancy is itself a publishable insight about self-knowledge limitations in expert judgment'
+              ]
+            }
+          ],
+          tags: ['Venture Capital', 'Founder Execution', 'Conjoint Analysis', 'Survey Design', 'Stated vs. Revealed Preference', 'Measurement', 'Cross-Cultural VC']
+        }
+      ]
+    },
+    {
+      id: 'ai',
+      label: 'AI & Entrepreneurship',
+      dotColor: '#6E8A9E',
+      iconLetter: 'A',
+      items: [
+        {
+          title: 'Does AI Help the Small Boss? A Field Experiment on AI Feature Adoption Among Chinese Small Manufacturers',
+          category: 'AI & Entrepreneurship',
+          maturity: 'Concrete Proposal',
+          color: '#6E8A9E',
+          iconLetter: 'A',
+          abstract: 'Millions of small Chinese factory owners manage procurement, pricing, customer communication, and inventory with minimal digital infrastructure. A SaaS platform serving several thousand such users offers a rare opportunity: a randomized field experiment embedding AI-assisted features into tools these owners already use daily. By varying which AI features are pushed to which users, we can causally identify whether AI tools improve business outcomes for a low-tech, high-skepticism population that is almost entirely absent from existing AI adoption research.',
+          points: [
+            {
+              label: 'Experimental Design',
+              items: [
+                'Platform RCT: users are randomly assigned across treatment arms at the account level prior to feature rollout — eliminating selection bias that plagues voluntary adoption studies',
+                'Four treatment arms: (1) AI customer communication assistant (replying to inquiries, quoting prices); (2) AI inventory & demand forecasting; (3) AI financial summary & reporting; (4) control group receiving a cosmetic UI update with no functional AI capability',
+                'A fifth "bundle" arm receives all three AI features — allowing estimation of complementarity effects between tool types',
+                'Staggered rollout design: if pure randomization is operationally difficult, a waitlist RCT (phased release by cohort) preserves causal identification via difference-in-differences with staggered treatment timing'
+              ]
+            },
+            {
+              label: 'Outcome Variables',
+              items: [
+                'Primary business outcomes: monthly revenue/GMV (drawn from platform transaction logs), order volume, customer repeat-purchase rate, and inventory turnover ratio',
+                'Platform engagement: daily active use, feature-specific click-through and task completion rates, time-on-platform — distinguishes genuine adoption from passive receipt',
+                'Efficiency proxies: response time to customer inquiries, quote generation speed, month-end reconciliation time (all measurable within the SaaS system)',
+                'Survival & exit: 6- and 12-month business continuity, measured by sustained platform subscription and self-reported factory operating status'
+              ]
+            },
+            {
+              label: 'Control Variables & Heterogeneity',
+              items: [
+                'Key controls: factory size (employee headcount), owner age and education level, industry sub-sector (apparel vs. hardware vs. electronics), prior digital tool usage intensity, geographic tier (Tier 1–4 city)',
+                'Central heterogeneity hypothesis: AI tools should generate the largest gains for owners with the lowest baseline digital literacy — the "last-mile AI" prediction. This is the opposite of the skill-biased technology narrative dominant in Western AI research',
+                'Secondary heterogeneity: effects may be larger for customer-facing features (communication, quoting) than back-office features (forecasting, reporting) among owners who are already strong on intuitive demand sensing but weak on written communication',
+                'Complementarity test: does the bundle arm outperform the sum of individual treatment arms? Positive complementarity would suggest AI tools work as a system, not as isolated utilities'
+              ]
+            }
+          ],
+          tags: ['Field Experiment', 'AI Adoption', 'China', 'SME', 'Manufacturing', 'RCT', 'Platform Data', 'Technology & Entrepreneurship']
+        },
+        {
+          title: 'The MBA Depreciation Schedule: Did AI Widen the Salary Gap Between High- and Low-Exposure Roles After 2022?',
+          category: 'AI & Entrepreneurship',
+          maturity: 'Working Hypothesis',
+          color: '#6E8A9E',
+          iconLetter: 'A',
+          abstract: 'MBA programs train graduates for careers in finance, consulting, and general management — many of which sit squarely in AI\'s high-exposure zone. If AI erodes the human capital value of skills taught in business school (financial modeling, market analysis, structured problem-solving), then post-2022 salary data should reveal a divergence: MBA graduates who landed in AI-resilient roles retain their credential premium, while those in high-exposure roles see it compress. The ChatGPT launch in late 2022 provides a clean natural experiment to test this.',
+          points: [
+            {
+              label: 'Identification Strategy',
+              items: [
+                'Difference-in-differences design: compare salary growth trajectories of MBA graduates in high-AI-exposure occupations vs. low-AI-exposure occupations, before and after Q4 2022 (ChatGPT launch as an exogenous shock)',
+                'AI exposure index: apply existing occupation-level AI exposure measures (e.g., Felten et al. 2023, Acemoglu\'s automation exposure index) to map each MBA graduate\'s job title onto a continuous exposure score',
+                'Treatment timing: the 2022 shock is sharp and externally imposed — it allows a pre/post design without requiring an instrument, as long as parallel trends hold in the pre-period'
+              ]
+            },
+            {
+              label: 'Data Sources',
+              items: [
+                'GMAC annual alumni surveys: the Graduate Management Admission Council conducts large-scale salary surveys of MBA graduates by function, industry, and years-out — covers pre- and post-2022 cohorts',
+                'LinkedIn Salary and Glassdoor: job-title-level salary data with graduation year filters, allowing construction of a panel by cohort × occupation × year',
+                'Complementary: compare MBA premium against non-MBA workers in the same occupation to isolate the credential component — does AI compress the degree premium specifically, or compress wages in that occupation overall?'
+              ]
+            },
+            {
+              label: 'Key Hypotheses & Heterogeneity',
+              items: [
+                'Primary hypothesis: the MBA salary premium in high-exposure functions (finance, consulting, marketing analytics) declines post-2022 relative to low-exposure functions (general management, operations leadership, entrepreneurship)',
+                'Signal vs. human capital decomposition: if the credential premium shrinks only in task-intensive roles but holds in managerial or relational roles, it suggests AI is eroding human capital value while leaving signaling value intact — a theoretically clean distinction',
+                'Tier heterogeneity: the effect should be larger for graduates of lower-ranked programs (whose credential primarily signals access to training, not elite network) and smaller for top-10 programs (where the network and brand persist regardless of skill obsolescence)',
+                'Tenure heterogeneity: recent graduates are more exposed — their salary is more tightly tied to task execution skills; senior MBAs with accumulated social capital and positional authority should see smaller effects'
+              ]
+            }
+          ],
+          tags: ['AI & Labor', 'MBA', 'Credential Premium', 'Difference-in-Differences', 'AI Exposure', 'Salary Data', 'Human Capital vs. Signaling']
+        },
+        {
+          title: 'The One-Person Company Effect: Did AI Coding Tools and Cloud Infrastructure Accelerate the Rise of Solo-Founder Ventures?',
+          category: 'AI & Entrepreneurship',
+          maturity: 'Working Hypothesis',
+          color: '#6E8A9E',
+          iconLetter: 'A',
+          abstract: 'Building a software company once required a team: a developer, a designer, an ops engineer, and someone to manage infrastructure. AI coding tools (Claude Code, Cursor, GitHub Copilot) and serverless cloud infrastructure (Vercel, Supabase, AWS Lambda) have compressed all of these into a single person\'s workflow. This study asks whether this technological shift produced a measurable increase in viable one-person companies — not just registered solo LLCs, but ventures that reach revenue, retain users, and survive — and whether AI tooling specifically is the driver or just one factor among many.',
+          points: [
+            {
+              label: 'Why Now, and Why Different',
+              items: [
+                'Solo entrepreneurship is not new, but historically solo software founders faced a hard ceiling: product scope was bounded by one person\'s time, and scaling required hiring. AI coding assistants remove the time constraint; cloud-native infrastructure removes the ops burden',
+                'The key shift post-2022 is qualitative, not just quantitative: one person can now ship, iterate, and operate a product at a pace that previously required a 3–5 person team — this changes the minimum viable company, not just its cost structure',
+                'Distinct from the gig economy narrative: OPCs are asset-building ventures (products, recurring revenue, equity) rather than labor-selling arrangements — a theoretically different form of solo economic activity'
+              ]
+            },
+            {
+              label: 'Data & Identification',
+              items: [
+                'U.S. Census Non-employer Statistics: annual counts of zero-employee firms by NAICS sector — look for an inflection in software/information services firms post-2022 relative to other sectors as a falsification test',
+                'Product Hunt launch data: each launch includes team size; track the share of solo-founder launches over time and correlate with AI tool adoption milestones (Copilot GA: 2022, ChatGPT: late 2022, Cursor mass adoption: 2024)',
+                'GitHub activity: compare commercialization rates (linked product page, Stripe integration, paying users) for solo-contributor repositories before and after AI coding tool availability',
+                'Identification challenge: remote work culture, post-layoff entrepreneurship, and AI tooling all accelerated together after 2020. Use sector variation as a partial fix — the effect should be concentrated in software/SaaS and near-zero in hardware, food, or services'
+              ]
+            },
+            {
+              label: 'Outcomes Beyond Formation',
+              items: [
+                'Company formation is the easy part to measure but not the most interesting — what matters is whether AI-era OPCs are more viable: do they reach $1K MRR faster, survive longer, and exit at higher rates than pre-AI solo ventures?',
+                'Indie Hackers and similar platforms contain longitudinal self-reported revenue data for thousands of solo founders, with founding year — a under-used dataset for this question',
+                'Heterogeneity of interest: the OPC effect should be largest for technical founders (who directly use AI coding tools) and smaller for non-technical founders (who rely on no-code tools) — this distinction lets us isolate AI coding specifically from the broader cloud democratization trend'
+              ]
+            }
+          ],
+          tags: ['AI & Entrepreneurship', 'One-Person Company', 'Solo Founder', 'AI Coding Tools', 'Cloud Infrastructure', 'Firm Formation', 'Census Data', 'Indie Hackers']
+        }
+      ]
+    },
+    {
+      id: 'marginalized',
+      label: 'Entrepreneurship & Marginalized Groups',
+      dotColor: '#A3929B',
+      iconLetter: 'M',
+      items: [
+        {
+          title: 'Controllable Pressure: A Cross-Cultural Framework for Employer Screening Logic',
+          category: 'Entrepreneurship & Marginalized Groups',
+          maturity: 'Developing',
+          color: '#A3929B',
+          iconLetter: 'M',
+          abstract: 'Employers don\'t merely screen for "low-risk" candidates — they screen for candidates under manageable, predictable pressure. This comparative study examines how residential geography functions as a hidden proxy for financial obligation and compliance in both Chinese and American labor markets, revealing culturally specific but structurally parallel mechanisms of coercive screening.',
+          points: [
+            {
+              label: 'Chinese Context',
+              items: [
+                'HR professionals show preference for mortgage-holding out-of-town migrant workers: geographic distance from hometown signals financial obligation, lower voluntary quit probability, and tolerance for demanding conditions',
+                'Residential status (hukou) and housing debt function as observable proxies for "how trapped" a candidate is — a form of institutionally-sanctioned financial leverage'
+              ]
+            },
+            {
+              label: 'U.S. BTB Context',
+              items: [
+                'Residential address in BTB-adopting jurisdictions encodes neighborhood crime rates, poverty levels, and implicitly substitutes for the criminal history box that policy removed',
+                'Employers shift screening burden onto geography when formal criminal record access is blocked — "you live there" becomes the new signal for "you have a record"'
+              ]
+            },
+            {
+              label: 'Cross-Cultural Parallel',
+              items: [
+                'Both contexts reveal geography as an employer-side leverage point for estimating "submissiveness risk" — economically-motivated compliance in China, coercive stability implied by limited mobility in the U.S.',
+                'Theoretical contribution: reframes geographic mismatch from a macro labor market phenomenon into an active, intentional screening variable deployed by individual hiring decision-makers'
+              ]
+            }
+          ],
+          tags: ['Labor Economics', 'Cross-Cultural', 'Statistical Discrimination', 'Geography', 'BTB Policy', 'China']
+        },
+        {
+          title: 'Address as the New Checkbox: A Resume Audit Design for Detecting Geographic Discrimination Post-BTB',
+          category: 'Entrepreneurship & Marginalized Groups',
+          maturity: 'Concrete Proposal',
+          color: '#A3929B',
+          iconLetter: 'M',
+          abstract: 'A direct empirical test of whether residential address becomes a substitute signal for criminal record after Ban-the-Box adoption. By randomizing two address dimensions — distance from employer and neighborhood poverty/crime index — across BTB and non-BTB jurisdictions, this design converts "spatial mismatch" from a macro backdrop into a manipulable experimental variable with causal identification.',
+          points: [
+            {
+              label: 'Experimental Design',
+              items: [
+                'Resume audit: randomize two address dimensions — commute distance (near vs. far) and neighborhood background (high-income vs. high-poverty/high-crime zip code)',
+                'Send matched resume pairs to employers in BTB-adopting and non-BTB jurisdictions within the same metropolitan labor market',
+                'Outcome variable: callback rate differences across the 2×2 address conditions, interacted with BTB adoption status'
+              ]
+            },
+            {
+              label: 'Predicted Findings',
+              items: [
+                'Black applicants from distant, high-poverty neighborhoods should face elevated rejection specifically in BTB regions — consistent with address functioning as a criminal record substitute',
+                'The penalty for "bad address" should increase in magnitude after BTB adoption — the "new checkbox" prediction',
+                'Effects should be attenuated in low-discretion hiring contexts (unionized, structured) relative to high-discretion ones'
+              ]
+            },
+            {
+              label: 'Methodological Contribution',
+              items: [
+                'First direct empirical design converting spatial mismatch into a causally identified experimental variable',
+                'Addresses a key gap in the BTB literature: most studies examine criminal history effects but cannot distinguish whether observed penalties are due to address signals or other mechanisms'
+              ]
+            }
+          ],
+          tags: ['Resume Audit', 'Causal Inference', 'BTB Policy', 'Geographic Discrimination', 'Field Experiment', 'Race & Labor']
+        }
+      ]
+    },
+    {
+      id: 'policy',
+      label: 'Policy & Entrepreneurship',
+      dotColor: '#B8A08C',
+      iconLetter: 'P',
+      items: [
+        {
+          title: 'Forced Founders: Does China\'s Social Credit Blacklist Drive Entrepreneurship as an Alternative to Employment?',
+          category: 'Policy & Entrepreneurship',
+          maturity: 'Working Hypothesis',
+          color: '#B8A08C',
+          iconLetter: 'P',
+          abstract: 'China\'s social credit blacklist bars individuals from high-speed rail, air travel, private schooling for children, government procurement, and — critically — most formal employment. Yet it does not bar them from registering a business. If blacklisted individuals are effectively locked out of wage labor, does entrepreneurship become the primary remaining pathway to economic participation? This idea proposes that institutional exclusion mechanisms can paradoxically raise entrepreneurial entry rates among penalized populations.',
+          points: [
+            {
+              label: 'The Mechanism',
+              items: [
+                'Blacklisted individuals face near-total closure of formal employment channels: background checks flag blacklist status, employers are legally discouraged from hiring blacklistees, and public-sector jobs are categorically barred',
+                'Business registration, by contrast, remains legally accessible — creating an asymmetric exclusion structure where self-employment is the last viable economic option',
+                'Prediction: blacklist entry should produce a measurable spike in new business registration rates among affected individuals, particularly in low-capital, informal-sector ventures'
+              ]
+            },
+            {
+              label: 'Connection to BTB Literature',
+              items: [
+                'Structurally parallel to "Ban-the-Box" research: when one economic pathway is blocked, individuals shift to adjacent strategies — often less desirable ones',
+                'Key distinction: BTB studies typically examine employer behavior; this idea examines the excluded individual\'s strategic response — entrepreneurship as a survival route rather than opportunity-driven entry',
+                'Tests whether the "institutional push" model of entrepreneurship generalizes to a non-Western, politically administered exclusion system'
+              ]
+            },
+            {
+              label: 'Empirical Strategy',
+              items: [
+                'Proposed design: difference-in-differences using staggered blacklist adoption timing across Chinese provinces/cities, matching blacklisted individuals to observationally similar non-blacklisted counterparts via administrative data',
+                'Outcome variables: new business registration within 6/12/24 months of blacklisting; business survival rates; sectoral distribution (formal vs. informal, registered vs. unregistered)',
+                'Heterogeneity analysis: effects should be larger for individuals with prior employment history and smaller for those already self-employed at time of blacklisting'
+              ]
+            }
+          ],
+          tags: ['China', 'Social Credit', 'Institutional Exclusion', 'Forced Entrepreneurship', 'Policy & Entrepreneurship', 'Difference-in-Differences']
+        }
+      ]
+    }
+  ];
+
+  /* ============================================================
+     BUILD LIST
+     ============================================================ */
+  (function () {
+    const container = document.getElementById('ideasContainer');
+
+    IDEA_CATEGORIES.forEach(cat => {
+      if (!cat.items.length) return; // skip empty categories for now
+
+      const section = document.createElement('div');
+      section.className = 'idea-category fade-in';
+
+      const heading = document.createElement('h2');
+      heading.className = 'idea-category-title';
+      heading.innerHTML = `<span class="category-dot" style="background:${cat.dotColor}"></span>${cat.label}`;
+      section.appendChild(heading);
+
+      const list = document.createElement('div');
+      list.className = 'idea-list';
+
+      cat.items.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'idea-item';
+        el.setAttribute('role', 'button');
+        el.setAttribute('tabindex', '0');
+
+        const maturityDotColor = item.maturity === 'Concrete Proposal' ? item.color : 'var(--border-medium)';
+
+        el.innerHTML = `
+          <div class="idea-item-icon" style="background:${item.color}">${item.iconLetter}</div>
+          <div class="idea-item-content">
+            <div class="idea-item-title">${item.title}</div>
+            <div class="idea-item-meta">${item.category}</div>
+            <div class="idea-item-tags">
+              ${item.tags.slice(0, 4).map(t => `<span class="idea-tag">${t}</span>`).join('')}
+            </div>
+          </div>
+          <div class="idea-item-maturity">
+            <span class="idea-item-maturity-dot" style="background:${maturityDotColor}"></span>
+            ${item.maturity}
+          </div>
+        `;
+
+        el.addEventListener('click', () => openIdeaModal(item));
+        el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openIdeaModal(item); });
+        list.appendChild(el);
+      });
+
+      section.appendChild(list);
+      container.appendChild(section);
+    });
+  })();
+
+  /* ============================================================
+     MODAL LOGIC
+     ============================================================ */
+  (function () {
+    const modal    = document.getElementById('ideaModal');
+    const backdrop = document.getElementById('ideaModalBackdrop');
+    const accentBar= document.getElementById('ideaAccentBar');
+    const closeBtn = document.getElementById('ideaModalClose');
+    const body     = document.getElementById('ideaModalBody');
+
+    window.openIdeaModal = function (item) {
+      accentBar.style.background = item.color;
+      modal.style.setProperty('--modal-accent', item.color);
+
+      const pointsHTML = item.points.map(section => `
+        <div class="modal-section-label">${section.label}</div>
+        <ul class="modal-desc-list">
+          ${section.items.map(b => `<li>${b}</li>`).join('')}
+        </ul>
+      `).join('');
+
+      body.innerHTML = `
+        <div class="modal-header">
+          <div class="modal-icon" style="background:${item.color}">${item.iconLetter}</div>
+          <div class="modal-header-text">
+            <div class="modal-title">${item.title}</div>
+            <div class="modal-meta">
+              ${item.category}
+              <span class="modal-maturity-badge">${item.maturity}</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-abstract">${item.abstract}</div>
+        ${pointsHTML}
+        <div class="modal-tags">
+          ${item.tags.map((t, i) => `<span class="modal-tag${i < 2 ? ' accent' : ''}">${t}</span>`).join('')}
+        </div>
+      `;
+      body.scrollTop = 0;
+      modal.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    };
+
+    function closeModal() {
+      modal.classList.remove('visible');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  })();
+  </script>
+</body>
+</html>

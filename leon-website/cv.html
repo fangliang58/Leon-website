@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Journey — Leon Liang Fang</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+  /* ================================================
+     JOURNEY PAGE — Horizontal Timeline
+     ================================================ */
+  html, body { height: 100%; overflow: hidden; }
+
+  .journey-page {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 65px);
+    overflow: hidden;
+  }
+
+  /* ---- Header ---- */
+  .journey-header {
+    flex-shrink: 0;
+    padding: 2.5rem 4rem 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+  }
+  .journey-header h1 { font-size: 2.2rem; line-height: 1; }
+  .journey-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ---- Scroll container ---- */
+  .htl-scroll {
+    flex: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0 4rem;
+    display: flex;
+    align-items: center;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-medium) transparent;
+  }
+  .htl-scroll::-webkit-scrollbar { height: 3px; }
+  .htl-scroll::-webkit-scrollbar-track { background: transparent; }
+  .htl-scroll::-webkit-scrollbar-thumb { background: var(--border-medium); border-radius: 2px; }
+
+  /* ---- Track ---- */
+  .htl-track {
+    position: relative;
+    /* width set by JS based on last node x */
+    height: 280px;
+    flex-shrink: 0;
+  }
+
+  /* ---- Timeline line ---- */
+  .htl-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    transform: translateY(-50%);
+    background: linear-gradient(to right,
+      transparent, var(--border-medium) 2%,
+      var(--border-medium) 98%, transparent);
+    z-index: 1;
+  }
+
+  /* ------------------------------------------------
+     NODE LAYOUT
+     Key principle: the DOT is always precisely on
+     the line. The label extends above (for .above
+     nodes) or below (for .below nodes).
+     ------------------------------------------------ */
+  .htl-node {
+    position: absolute;
+    /* left set inline */
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+  }
+
+  /* ABOVE: label → connector → dot (top to bottom)
+     Position: bottom edge of the node sits at (50% - half-dot) so the dot
+     center is exactly at 50% = the line */
+  .htl-node.above {
+    bottom: calc(50% - 25px);   /* 25px = half of 50px dot */
+    flex-direction: column;    /* label first (top), dot last (bottom = on line) */
+  }
+
+  /* BELOW: dot → connector → label (top to bottom)
+     Position: top edge of the node sits at (50% - half-dot) */
+  .htl-node.below {
+    top: calc(50% - 25px);
+    flex-direction: column;    /* dot first (top = on line), label last (bottom) */
+  }
+
+  /* ---- Dot (now a logo badge) ---- */
+  .htl-dot {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--border-light);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.10);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 11;
+  }
+  /* Logo image inside dot */
+  .htl-dot-img {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    border-radius: 50%;
+    display: block;
+  }
+  /* Init badge inside dot (fallback) */
+  .htl-dot-init {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-size: 0.6rem;
+    font-weight: 800;
+    color: white;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .htl-node.is-event .htl-dot {
+    border-radius: 6px;
+    transform: rotate(45deg);
+  }
+  .htl-node.is-event .htl-dot .htl-dot-img,
+  .htl-node.is-event .htl-dot .htl-dot-init {
+    transform: rotate(-45deg);
+  }
+
+  /* ---- Connector ---- */
+  .htl-connector {
+    width: 1px;
+    height: 36px;
+    background: var(--border-light);
+    flex-shrink: 0;
+    transition: background 0.28s ease;
+  }
+
+  /* ---- Compact label ---- */
+  .htl-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.28s ease;
+    padding: 0 4px;
+  }
+
+  .htl-label-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3px;
+  }
+
+  /* Legacy logo classes (unused — logos now live inside .htl-dot) */
+  .htl-logo { display: none; }
+  .htl-logo-init {
+    display: none;
+    letter-spacing: 0;
+  }
+
+  .htl-org {
+    font-family: var(--font-serif);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    line-height: 1.25;
+  }
+  /* Two-line org name support */
+  .htl-org-line2 {
+    font-family: var(--font-serif);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    line-height: 1.25;
+    display: block;
+    text-align: center;
+  }
+  .htl-role {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+
+  /* ---- Year markers — placed at bottom of track ---- */
+  .htl-year {
+    position: absolute;
+    bottom: 10px;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    color: var(--border-medium);
+    letter-spacing: 0.1em;
+    user-select: none;
+    z-index: 2;
+  }
+
+  /* ---- Hover: dim siblings ---- */
+  .htl-track.has-active .htl-node:not(.active) {
+    opacity: 0.1;
+  }
+
+  /* ---- Active node ---- */
+  .htl-node.active .htl-dot {
+    transform: scale(1.12);
+    border-color: currentColor;
+    box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 25%, transparent),
+                0 4px 14px rgba(0,0,0,0.15);
+  }
+  .htl-node.active.is-event .htl-dot {
+    transform: rotate(45deg) scale(1.12);
+  }
+  .htl-node.active .htl-label {
+    transform: scale(1.06);
+  }
+  .htl-node.active .htl-org,
+  .htl-node.active .htl-org-line2 {
+    color: var(--text-primary);
+  }
+  .htl-node.active .htl-connector {
+    background: var(--border-medium);
+  }
+
+  /* Pulse for "Now" */
+  @keyframes tlPulse {
+    0%   { box-shadow: 0 0 0 0 rgba(184,160,140,0.5); }
+    70%  { box-shadow: 0 0 0 10px rgba(184,160,140,0); }
+    100% { box-shadow: 0 0 0 0 rgba(184,160,140,0); }
+  }
+  .htl-node.is-now .htl-dot {
+    animation: tlPulse 2.2s ease-out infinite;
+  }
+
+  /* ================================================
+     DRAWER PANEL (slides in from right)
+     ================================================ */
+  .htl-drawer {
+    position: fixed;
+    right: 0;
+    top: 65px;   /* below nav */
+    bottom: 0;
+    width: 380px;
+    background: var(--bg-primary);
+    border-left: 1px solid var(--border-light);
+    box-shadow: -8px 0 40px rgba(58, 54, 50, 0.08);
+    transform: translateX(100%);
+    transition: transform 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 800;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .htl-drawer.visible {
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  /* Colored accent bar at top */
+  .drawer-accent-bar {
+    height: 4px;
+    width: 100%;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+
+  /* Scrollable content area */
+  .drawer-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 2rem 2.2rem 2.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-light) transparent;
+  }
+  .drawer-body::-webkit-scrollbar { width: 3px; }
+  .drawer-body::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
+
+  /* Idle hint (shown when no node hovered) */
+  .drawer-idle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 0.75rem;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+  .drawer-idle.hidden { display: none; }
+  .drawer-idle-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+  .drawer-idle p {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* Detail content */
+  .drawer-detail { display: none; }
+  .drawer-detail.visible { display: block; }
+
+  .drawer-header {
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 1.2rem;
+  }
+  /* Logo + title row inside drawer */
+  .drawer-header-top {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-bottom: 0.55rem;
+  }
+  .drawer-header-logo {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-light);
+    background: white;
+    object-fit: contain;
+    padding: 3px;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+  .drawer-org-name {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 0.15rem;
+  }
+  .drawer-role-name {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .drawer-meta {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    margin-top: 0.3rem;
+  }
+  .drawer-about {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.65;
+    margin-bottom: 1.2rem;
+    padding: 0.85rem 1rem;
+    background: var(--bg-secondary);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent-color, var(--accent-taupe));
+  }
+  .drawer-highlights-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .drawer-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .drawer-highlights li {
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.86rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 0.65rem;
+  }
+  .drawer-highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.58em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-color, var(--accent-taupe));
+    opacity: 0.6;
+  }
+
+  /* ---- Footer skills ---- */
+  .journey-footer {
+    flex-shrink: 0;
+    padding: 0.9rem 4rem 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    border-top: 1px solid var(--border-light);
+  }
+  .journey-footer-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .journey-skills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .skill-tag {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 100px;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+  }
+  .skill-tag:hover { border-color: var(--accent-taupe); color: var(--accent-taupe); }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">Leon <span>Liang Fang</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="cv.html" class="active">Journey</a></li>
+      <li><a href="research.html">Research</a></li>
+      <li><a href="ideas.html">Ideas</a></li>
+      <li><a href="why-phd.html">Why PhD</a></li>
+    </ul>
+    <button class="nav-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <main class="page-content">
+    <div class="journey-page">
+
+      <div class="journey-header">
+        <h1>The Road So Far</h1>
+        <span class="journey-subtitle">Hover to explore &rarr;</span>
+      </div>
+
+      <div class="htl-scroll" id="htlScroll">
+        <div class="htl-track" id="htlTrack">
+          <div class="htl-line"></div>
+        </div>
+      </div>
+
+      <div class="journey-footer">
+        <span class="journey-footer-label">Skills</span>
+        <div class="journey-skills">
+          <span class="skill-tag">R</span>
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">Stata</span>
+          <span class="skill-tag">LaTeX</span>
+          <span class="skill-tag">Tableau</span>
+          <span class="skill-tag">Web Scraping</span>
+          <span class="skill-tag">LLM Pipelines</span>
+          <span class="skill-tag">GRE 333</span>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Right-side drawer panel -->
+  <div class="htl-drawer" id="htlDrawer">
+    <div class="drawer-accent-bar" id="drawerAccentBar"></div>
+    <div class="drawer-body">
+      <!-- Idle state -->
+      <div class="drawer-idle" id="drawerIdle">
+        <div class="drawer-idle-icon">&#8594;</div>
+        <p>Hover a node to explore</p>
+      </div>
+      <!-- Detail state -->
+      <div class="drawer-detail" id="drawerDetail"></div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+  /* ============================================================
+     TIMELINE DATA
+     ============================================================ */
+  const TL_NODES = [
+    {
+      id: 'uci',
+      orgLines: ['UC Irvine'],
+      role: 'BA Economics & Fine Arts',
+      drawerRole: 'Bachelor of Arts in Economics<br>Bachelor of Arts in Fine Arts',
+      period: 'Sep 2016 – Jun 2020',
+      location: 'Irvine, CA',
+      color: '#8E9BAA',
+      side: 'above',
+      x: 100,
+      logo: 'assets/images/logos/uci.png',
+      about: null,
+      sections: [
+        {
+          label: 'Academic Achievement',
+          items: [
+            'GPA 3.7/4.0 — Cum Laude Honor'
+          ]
+        },
+        {
+          label: 'Coursework',
+          items: [
+            'Econometrics & Probability',
+            'International Economics & Business Economics',
+            'Statistics, Microeconomics & Macroeconomics',
+            'Corporate Finance & Accounting'
+          ]
+        },
+        {
+          label: 'Activities & Leadership',
+          items: [
+            'UCI CSSA (Chinese Students & Scholars Association) — Vice President',
+            'CareerX Club — Director'
+          ]
+        },
+        {
+          label: 'Internships',
+          items: [
+            '— To be added'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'triangle-founded',
+      orgLines: ['Triangle Education'],
+      role: 'Co-Founder & CMO',
+      period: 'Sep 2020 – Jan 2023',
+      location: 'Beijing, China',
+      color: '#7D8C7E',
+      side: 'below',
+      x: 310,
+      logo: 'assets/images/logos/triangle.jpg',
+      about: 'A K12 financial literacy and life-skills education company for Chinese children. Curriculum taught kids how the world actually works — economics, communication, and global perspective. Operated 5 offline learning centers (Beijing & Hangzhou) alongside a growing online platform. Acquired in January 2023 after three years — a full founder cycle from ideation to exit.',
+      highlights: [
+        'Peak annual revenue of ¥100M (RMB)',
+        'Scaled from zero to 5 offline centers across Beijing and Hangzhou',
+        'Defined curriculum, user personas, and learning engagement modules',
+        'Executed 20+ campaigns/events, growing 30,000+ social followers',
+        'Generated 2,000+ leads, converted 200+ paying clients',
+        'Recruited and led a 5-person marketing & sales team',
+        'Acquired Jan 2023 — full founder journey: ideation → build → scale → exit'
+      ]
+    },
+    {
+      id: 'bytedance',
+      orgLines: ['ByteDance'],
+      role: 'Digital Marketing Intern',
+      period: 'Oct 2020 – Feb 2021',
+      location: 'Beijing, China',
+      color: '#9B8E82',
+      side: 'above',
+      x: 500,
+      logo: 'assets/images/logos/bytedance.png',
+      about: 'Placed in the Feishu (Lark) division — ByteDance\'s enterprise collaboration suite and China\'s second-largest office software. Joined the Digital Marketing team, working across data analytics and offline event operations.',
+      highlights: [
+        'Core product focus: Feishu (飞书) — China\'s #2 office software platform',
+        'Participated in Feishu\'s inaugural "未来无限大会" (Future Unlimited Conference) — responsible for venue operations and on-site logistics management',
+        'Digital analytics: Google Analytics & Oracle DB to track and improve Feishu product performance',
+        'Generated 13% increase in user growth for Feishu official website',
+        '"Growth Plan" marketing campaign: 200+ MQLs and 10+ enterprise tenant acquisitions'
+      ]
+    },
+    {
+      id: 'dtcapital',
+      orgLines: ['DT Capital'],
+      role: 'Analyst Intern',
+      period: 'Feb 2021 – May 2021',
+      location: 'Shanghai, China',
+      color: '#B8A08C',
+      side: 'below',
+      x: 700,
+      logo: 'assets/images/logos/dt-capital.avif',
+      about: 'DT Capital Partners is a leading Chinese PE/VC firm. Joined as analyst intern with primary focus on the SaaS and consumer investment tracks — covering deal sourcing, due diligence, and primary market research.',
+      highlights: [
+        'Supported NYSE IPO project "Mabang" (马帮) — participated in deal sourcing and full due diligence process',
+        'Investment focus: SaaS and consumer sectors; conducted 40+ founder and customer interviews',
+        'Led deep-dive research on China\'s low-alcohol beverage (低度酒) market — 55-page report based on 100-person consumer survey',
+        'Mapped competitive landscape and consumer trend shifts in the emerging low-ABV category'
+      ]
+    },
+    {
+      id: 'duke',
+      orgLines: ['Duke Fuqua'],
+      role: 'MS Management Studies',
+      period: 'Jul 2021 – May 2022',
+      location: 'Durham, NC',
+      color: '#003087',
+      side: 'above',
+      x: 900,
+      logo: 'assets/images/logos/duke.svg',
+      about: null,
+      sections: [
+        {
+          label: 'Academic Achievement',
+          items: ['GPA 3.6/4.0']
+        },
+        {
+          label: 'Coursework',
+          items: [
+            'Corporate Finance & Financial Accounting',
+            'Marketing Research & Consumer Behavior',
+            'Quantitative Analysis & Decision-Making',
+            'Strategy, Organizational Behavior & Leadership'
+          ]
+        },
+        {
+          label: 'Capstone Project',
+          items: [
+            'Supervised by Prof. Allison J.B. Chaney',
+            'Game studio acquisition advisory: built M&A recommendation framework for a mid-size gaming studio',
+            'Methods: Python, conjoint analysis, K-means clustering, market segmentation'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'zhenfund',
+      orgLines: ['ZhenFund'],
+      role: 'Post-Investment',
+      period: 'Feb 2023 – Oct 2023',
+      location: 'Beijing, China',
+      color: '#A3929B',
+      side: 'below',
+      x: 1080,
+      logo: 'assets/images/logos/zhenfund.avif',
+      about: 'ZhenFund is ranked #1 among China\'s premier angel investment funds. Co-founded with Sequoia China, managing approximately $5B AUM.',
+      sections: [
+        {
+          label: 'Portfolio Management',
+          items: [
+            'Managed post-investment relationships for 30+ portfolio companies',
+            'Connected portfolio startups with strategic resources: talent, BD, media, and follow-on capital',
+            'Advised on go-to-market strategy, product positioning, and growth challenges',
+            'Facilitated ~US$8M in cumulative follow-on funding through 300+ investor introductions'
+          ]
+        },
+        {
+          label: 'Government Relations & LP Development',
+          items: [
+            'Worked with government-guided funds (FOFs) and municipal LPs for fund capital raising',
+            'Organized LP roadshows and official government engagement visits',
+            'Helped portfolio companies identify and secure government-supported landing sites',
+            'Policy endorsement, media positioning, and official recognition outreach'
+          ]
+        },
+        {
+          label: 'Industry Research',
+          items: [
+            'Z-Bench: developed a novel LLM evaluation suite with 1,000+ prompts across 4 domains',
+            'AI entrepreneurship landscape: mapping the emerging startup ecosystem in China',
+            'Gaming sector: research on AI-driven game development trends and investment opportunities'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'hangzhou',
+      orgLines: ['Hangzhou IC', 'Innovation Centre'],
+      role: 'Manager, Incubation',
+      period: 'Jan 2024 – Dec 2025',
+      location: 'Hangzhou, China',
+      color: '#A3929B',
+      side: 'above',
+      x: 1280,
+      logo: 'assets/images/logos/hz-ic.jpg',
+      about: 'Government-supported incubation platform for early-stage IC and AI ventures. Facilitates regional tech growth through financial advising, VC connections, and policy support.',
+      highlights: [
+        'Sourced and incubated 100+ startups; recruited 11, exceeding annual target by 40%',
+        '50+ pitch coaching sessions; 9 successful funding cases totaling $1.5M+',
+        'Authored 3 research reports on AI entrepreneurship subsidies in Hangzhou',
+        '"Navigating the Labyrinth" — 25-page report on municipal AI subsidy design'
+      ]
+    },
+    {
+      id: 'now',
+      orgLines: ['Harvard Business School'],
+      role: 'Part-time RA',
+      period: 'Dec 2025 – Present',
+      location: 'Remote',
+      color: '#B8A08C',
+      side: 'below',
+      x: 1480,
+      isNow: false,
+      logo: 'assets/images/logos/hbs.jpg',
+      about: null,
+      sections: [
+        {
+          label: 'Role & Lab',
+          items: [
+            'Part-time Research Assistant at LISH (Laboratory for Innovation Science at Harvard)',
+            'Supervised by Prof. Lane & Prof. Bernstein'
+          ]
+        },
+        {
+          label: 'Research Work',
+          items: [
+            'Cross-region founder survey spanning U.S., Europe & China',
+            'AI/LLM research pipeline: prompt design, model evaluation, and data analysis',
+            'Bridging practitioner experience with academic entrepreneurship research'
+          ]
+        }
+      ]
+    },
+    {
+      id: 'kellogg',
+      orgLines: ['Kellogg School', 'of Management'],
+      role: 'Part-time RA',
+      period: 'Dec 2025 – Present',
+      location: 'Remote',
+      color: '#4E2A84',
+      side: 'above',
+      x: 1680,
+      isNow: true,
+      logo: 'assets/images/logos/kellogg.png',
+      about: null,
+      sections: [
+        {
+          label: 'Role & Supervisor',
+          items: [
+            'Part-time Research Assistant at Kellogg School of Management, Northwestern University',
+            'Supervised by Prof. Kylie Jiwon Hwang'
+          ]
+        },
+        {
+          label: 'Research Focus',
+          items: [
+            'Entrepreneurship, labor reintegration, and employment discrimination',
+            'Quantitative analysis using Stata regression and spatial analysis',
+            'Investigating barriers to re-entry in entrepreneurial labor markets'
+          ]
+        }
+      ]
+    }
+  ];
+
+  const TL_YEARS = [
+    { label: '2016', x: 100 },
+    { label: '2020', x: 310 },
+    { label: '2021', x: 700 },
+    { label: '2022', x: 900 },
+    { label: '2023', x: 1080 },
+    { label: '2024', x: 1280 },
+    { label: '2025', x: 1480 },
+    { label: '2026', x: 1680 },
+  ];
+
+  /* ============================================================
+     BUILD TIMELINE
+     ============================================================ */
+  (function () {
+    const track       = document.getElementById('htlTrack');
+    const drawer      = document.getElementById('htlDrawer');
+    const drawerIdle  = document.getElementById('drawerIdle');
+    const drawerDetail= document.getElementById('drawerDetail');
+    const accentBar   = document.getElementById('drawerAccentBar');
+
+    /* Set track width */
+    const lastX = TL_NODES[TL_NODES.length - 1].x;
+    track.style.width = (lastX + 140) + 'px';
+
+    /* ---- Year markers ---- */
+    TL_YEARS.forEach(yr => {
+      const el = document.createElement('div');
+      el.className = 'htl-year';
+      el.textContent = yr.label;
+      el.style.left = yr.x + 'px';
+      track.appendChild(el);
+    });
+
+    /* ---- Nodes ---- */
+    TL_NODES.forEach(data => {
+      const node = document.createElement('div');
+      const classes = ['htl-node', data.side];
+      if (data.isEvent) classes.push('is-event');
+      if (data.isNow)   classes.push('is-now');
+      node.className = classes.join(' ');
+      node.style.left  = data.x + 'px';
+      node.style.color = data.color;
+
+      /* Logo inside dot — SVG image, no external API */
+      let dotInnerHTML = '';
+      if (data.logo) {
+        dotInnerHTML = `<img class="htl-dot-img" src="${data.logo}" alt="${data.orgLines[0]}">`;
+      }
+
+      /* Org name (supports two lines) */
+      let orgHTML = '';
+      if (data.orgLines.length === 1) {
+        orgHTML = `<span class="htl-org">${data.orgLines[0]}</span>`;
+      } else {
+        orgHTML = data.orgLines.map((l, i) =>
+          i === 0
+            ? `<span class="htl-org">${l}</span>`
+            : `<span class="htl-org-line2">${l}</span>`
+        ).join('');
+      }
+
+      const labelHTML = `
+        <div class="htl-label">
+          <div class="htl-label-top">
+            <div style="display:flex;flex-direction:column;align-items:center">${orgHTML}</div>
+          </div>
+          <span class="htl-role">${data.role}</span>
+        </div>
+      `;
+
+      const connectorHTML = `<div class="htl-connector"></div>`;
+      const dotHTML       = `<div class="htl-dot">${dotInnerHTML}</div>`;
+
+      /* For "above": label → connector → dot (top to bottom) */
+      /* For "below": dot → connector → label (top to bottom) */
+      node.innerHTML = data.side === 'above'
+        ? labelHTML + connectorHTML + dotHTML
+        : dotHTML   + connectorHTML + labelHTML;
+
+      track.appendChild(node);
+
+      /* ---- Hover events ---- */
+      node.addEventListener('mouseenter', () => {
+        activateNode(node);
+        openDrawer(data);
+      });
+      node.addEventListener('mouseleave', e => {
+        if (!drawer.contains(e.relatedTarget)) scheduleHide();
+      });
+    });
+
+    /* Keep drawer alive while mouse is inside it */
+    drawer.addEventListener('mouseenter', () => cancelHide());
+    drawer.addEventListener('mouseleave', e => {
+      const active = track.querySelector('.htl-node.active');
+      if (active && !active.contains(e.relatedTarget)) scheduleHide();
+    });
+
+    /* ---- Activate / deactivate node ---- */
+    function activateNode(node) {
+      track.querySelectorAll('.htl-node.active').forEach(n => n.classList.remove('active'));
+      track.classList.add('has-active');
+      node.classList.add('active');
+    }
+
+    /* ---- Hide with small delay so mouse can travel to drawer ---- */
+    let hideTimer  = null;
+    let resetTimer = null;   /* tracks the post-transition content-clear */
+    function scheduleHide() {
+      hideTimer = setTimeout(hideAll, 160);
+    }
+    function cancelHide() {
+      clearTimeout(hideTimer);
+    }
+    function hideAll() {
+      drawer.classList.remove('visible');
+      track.querySelectorAll('.htl-node.active').forEach(n => n.classList.remove('active'));
+      track.classList.remove('has-active');
+      /* Reset drawer to idle after slide-out transition */
+      resetTimer = setTimeout(() => {
+        drawerIdle.classList.remove('hidden');
+        drawerDetail.classList.remove('visible');
+        drawerDetail.innerHTML = '';
+        accentBar.style.background = 'var(--border-light)';
+      }, 400);
+    }
+
+    /* ---- Open drawer with content ---- */
+    function openDrawer(data) {
+      cancelHide();
+      clearTimeout(resetTimer);   /* cancel any stale content-clear so it won't blank the new content */
+
+      /* Accent bar color */
+      accentBar.style.background = data.color;
+
+      /* Build detail HTML */
+      drawerDetail.style.setProperty('--accent-color', data.color);
+
+      /* Role: support two-line full form via drawerRole */
+      const roleHTML = data.drawerRole || data.role;
+
+      /* About block (optional) */
+      const aboutHTML = data.about
+        ? `<div class="drawer-about">${data.about}</div>`
+        : '';
+
+      /* Content: multi-section (sections[]) or single list (highlights[]) */
+      let contentHTML = '';
+      if (data.sections && data.sections.length) {
+        contentHTML = data.sections.map(sec => `
+          <div class="drawer-highlights-label">${sec.label}</div>
+          <ul class="drawer-highlights">
+            ${sec.items.map(h => `<li>${h}</li>`).join('')}
+          </ul>`).join('');
+      } else if (data.highlights && data.highlights.length) {
+        contentHTML = `
+          <div class="drawer-highlights-label">Key Contributions</div>
+          <ul class="drawer-highlights">
+            ${data.highlights.map(h => `<li>${h}</li>`).join('')}
+          </ul>`;
+      }
+
+      const logoImgHTML = data.logo
+        ? `<img class="drawer-header-logo" src="${data.logo}" alt="${data.orgLines[0]}">`
+        : '';
+
+      drawerDetail.innerHTML = `
+        <div class="drawer-header">
+          <div class="drawer-header-top">
+            ${logoImgHTML}
+            <div>
+              <div class="drawer-org-name">${data.orgLines.join(' ')}</div>
+              <div class="drawer-role-name">${roleHTML}</div>
+            </div>
+          </div>
+          <div class="drawer-meta">${data.period} &middot; ${data.location}</div>
+        </div>
+        ${aboutHTML}
+        ${contentHTML}
+      `;
+
+      drawerIdle.classList.add('hidden');
+      drawerDetail.classList.add('visible');
+      drawer.classList.add('visible');
+      /* Scroll detail back to top */
+      drawer.querySelector('.drawer-body').scrollTop = 0;
+    }
+
+  })();
+  </script>
+</body>
+</html>
