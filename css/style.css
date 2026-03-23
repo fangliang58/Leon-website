@@ -1055,26 +1055,57 @@ p {
    RESPONSIVE
    ============================================ */
 
+/* --- Touch scrolling for all devices --- */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Mobile nav overlay backdrop --- */
+.nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(58, 54, 50, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.nav-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 @media (max-width: 900px) {
+  .nav-overlay { display: block; }
+
   .hero {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 2.5rem;
-    padding: 3rem 1.5rem;
+    gap: 2rem;
+    padding: 2rem 1.5rem;
   }
 
   .hero-text { padding-right: 0; order: 2; }
   .hero-image-wrapper { order: 1; }
-  .hero-name { font-size: 2.8rem; }
-  .hero-tagline { margin: 1.5rem auto 1rem; }
+  .hero-name { font-size: 2.8rem; white-space: normal; }
+  .hero-tagline { margin: 1rem auto 0.8rem; }
   .hero-keywords { justify-content: center; }
-  .hero-cta { justify-content: center; }
-  .hero-credentials { margin: 1.2rem 0 1rem; }
+  .hero-cta { justify-content: center; flex-wrap: wrap; }
+  .hero-credentials { margin: 1rem 0 0.8rem; }
   .credential-label { width: 64px; }
 
   .hero-image-frame {
-    width: 280px;
-    height: 350px;
+    width: 240px;
+    height: 300px;
+  }
+
+  .hero-image-decoration,
+  .hero-image-decoration-2 {
+    display: none;
   }
 
   .about-snapshot {
@@ -1082,7 +1113,8 @@ p {
   }
 
   .section { padding: 3rem 1.5rem; }
-  h1 { font-size: 2.4rem; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.5rem; }
 
   /* Timeline responsive */
   .timeline-line { left: 24px; }
@@ -1092,22 +1124,38 @@ p {
   .timeline-spacer { display: none; }
   .timeline-dot { left: 24px; }
 
+  /* Nav */
   .nav {
     padding: 1rem 1.5rem;
   }
 
   .nav-links {
     position: fixed;
-    top: 60px;
+    top: 0;
     right: -100%;
-    width: 70%;
-    height: calc(100vh - 60px);
+    width: 75%;
+    max-width: 300px;
+    height: 100vh;
     background: var(--bg-primary);
     flex-direction: column;
-    padding: 2rem;
-    gap: 1.5rem;
-    transition: right 0.3s ease;
+    padding: 5rem 2rem 2rem;
+    gap: 0;
+    transition: right 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     border-left: 1px solid var(--border-light);
+    box-shadow: -4px 0 30px rgba(58, 54, 50, 0.1);
+    z-index: 1001;
+    overflow-y: auto;
+  }
+
+  .nav-links li {
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 1rem 0;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
   }
 
   .nav-links.open {
@@ -1116,18 +1164,78 @@ p {
 
   .nav-toggle {
     display: flex;
+    z-index: 1002;
+    position: relative;
+    width: 28px;
+    height: 20px;
+    padding: 0;
+  }
+
+  .nav-toggle span {
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    background: var(--text-primary);
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+
+  .nav-toggle span:nth-child(1) { top: 0; }
+  .nav-toggle span:nth-child(2) { top: 9px; }
+  .nav-toggle span:nth-child(3) { top: 18px; }
+
+  /* Hamburger → X animation (driven by JS adding .open) */
+  .nav-toggle.open span:nth-child(1) {
+    top: 9px;
+    transform: rotate(45deg);
+  }
+  .nav-toggle.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .nav-toggle.open span:nth-child(3) {
+    top: 9px;
+    transform: rotate(-45deg);
   }
 
   .ideas-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Footer */
+  .footer {
+    padding: 2rem 1.5rem;
+    margin-top: 2rem;
+  }
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .hero-name { font-size: 2.2rem; }
-  .hero-image-frame { width: 220px; height: 280px; }
+  .hero-name { font-size: 2rem; }
+  .hero-image-frame { width: 180px; height: 230px; }
   .nav { padding: 0.8rem 1rem; }
   .section { padding: 2rem 1rem; }
+  h1 { font-size: 1.7rem; }
+
+  .hero-greeting { font-size: 0.75rem; margin-bottom: 1rem; }
+  .hero-tagline { font-size: 0.95rem; }
+
+  .hero-keywords .keyword {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .btn {
+    font-size: 0.82rem;
+    padding: 0.65rem 1.4rem;
+  }
+
+  .credential-value { font-size: 0.85rem; }
+  .credential-label { font-size: 0.6rem; }
 }
 
 /* --- Scroll Animations --- */
